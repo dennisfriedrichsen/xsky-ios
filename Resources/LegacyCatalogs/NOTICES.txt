@@ -1,0 +1,115 @@
+XSky for iPad — Third-Party Notices and Attributions
+=====================================================
+
+XSky for iPad is a native port of the XSky X Window System application.
+This document collects, in one place, the original author's copyright
+notice, warranty disclaimer, and acknowledgements (reproduced verbatim
+below), together with attribution for the bundled astronomical catalogs
+and the pointer cursor glyph. It supersedes the separate Copyright.txt,
+Warranty.txt, and ACKNOWLEDGEMENTS files for in-app display; those files
+remain bundled unmodified alongside this one.
+
+XSky for iPad is offered at no cost in the App Store.
+
+
+ORIGINAL COPYRIGHT AND LICENSE
+-------------------------------
+xsky - an interactive sky atlas
+
+Copyright 1992-6, Terry R. Friedrichsen
+
+This program may be copied and redistributed, in whole or in part,
+as long as you don't try to make any money from the sale or redis-
+tribution of the program or any part of the program, or pretend
+that you wrote the program or any of its parts unless specifically
+credited by the original author.
+
+You are free to make use of this software in your own programs, as
+long as you credit the original author where it is due.
+
+
+WARRANTY
+--------
+xsky was written as a learning project and as a demonstration of
+X Window System programming. xsky doesn't do anything; it is not
+merchantable, and it is not fit for any purpose whatsoever. In
+fact, don't use xsky at all; it's free, and you're getting what
+you paid for.
+
+
+ACKNOWLEDGEMENTS
+-----------------
+Thanks are due to the National Space Sciences Data Center for the original
+versions of the object catalogs which have been abridged for use of the
+xsky program.
+
+Thanks also to PC Leyland, who provided a BASIC program called PRECESS.BAS,
+from which I extracted the algorithm and constants used in the precession
+code.
+
+A big thanks to Jim Sharpe, who was the original beta tester and made sure
+xsky worked on HP and SGI machines. He also provided a number of useful
+suggestions for improving the utility of the user interface.
+
+The handling of larger catalogs, such as SAO, was speeded up greatly by
+Brian Wing, who wrote a routine to pre-screen objects for inclusion in the
+display while avoiding a lot of spherical trigonometry. Only after an
+object passes Brian's quick test does it fall into the normal code, which
+does a definitive, but compute-intensive, analysis. This hack speeds up
+the SAO catalog at the default display scale by a factor of fifteen, giving
+two-second update times on my DECstation 5000/200.
+
+Bill Owen at JPL and Mike Delevoryas pointed me to Nancy G. Roman's paper
+in PASP which described a clever method of determining the constellation
+containing a given point on the sky. Bill Owen was also kind enough to
+track down the correct values after I discovered an error in the constel-
+lation boundary data as distributed by NASA ADC.
+
+Finally, thanks to Jean Meeus for writing "Astronomical Algorithms," pub-
+lished by Wilmann-Bell. The clear equations he provides replaced a fair
+amount of my own grungy spherical trigonometry.
+
+Terry R. Friedrichsen
+terry@venus.sunquest.com  (Internet)
+uunet!sunquest!terry      (Usenet)
+terry@sds.sdsc.edu        (alternate address; I live in Tucson)
+
+
+BUNDLED CATALOG DATA
+---------------------
+- Yale Catalog of Bright Stars, 4th ed. — originally distributed via the
+  National Space Science Data Center (NSSDC).
+- Revised New General Catalogue of Non-Stellar Objects — originally
+  distributed via the NSSDC.
+- An optical catalog of quasi-stellar objects, as distributed with the
+  original xsky. (Primary source not identified in the original xsky
+  distribution; pending identification as part of the licensing review.)
+- Constellation boundaries: Roman, N. G. 1987, Publications of the
+  Astronomical Society of the Pacific, 99, 695, as corrected for the
+  NASA Astronomical Data Center by Bill Owen (JPL).
+- Herget precession algorithm and constants, credited to Dr. Wayne H.
+  Warren, Jr., based on a BASIC implementation (PRECESS.BAS) provided by
+  PC Leyland.
+- SAO catalog display speed-up technique contributed by Brian Wing.
+
+All catalog data above is bundled as abridged for, and distributed with,
+the original xsky application.
+
+
+POINTER CURSOR
+---------------
+The pointer glyph shown on devices with an attached mouse or trackpad is
+the X11 "Trek" cursor (XC_trek, glyph 142) from the X Window System
+`cursor` font, as distributed in X.Org's font-cursor-misc package. The
+package's original copyright notice describes these cursor glyphs as
+"unencumbered."
+
+
+LICENSING STATUS
+------------------
+The original xsky license (above) permits copying and redistribution but
+not sale, and requires crediting the original author; the source and
+authorship of the bundled quasi-stellar object catalog is unconfirmed.
+Both points are under active human review before this app's continued
+distribution. See the "Licensing Review" section of the About screen for
+current status.
