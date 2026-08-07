@@ -93,7 +93,7 @@ struct WorkspaceView: View {
             "Import diagnostics",
             isPresented: importDiagnosticsBinding
         ) {
-            Button("OK") { workspace.importDiagnostics = nil }
+            Button("Acknowledged") { workspace.importDiagnostics = nil }
         } message: {
             Text(workspace.importDiagnostics ?? "")
         }

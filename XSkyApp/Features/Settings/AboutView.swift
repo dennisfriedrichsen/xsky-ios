@@ -53,6 +53,18 @@ struct AboutView: View {
                         """)
 
                     section(
+                        "Cursor",
+                        """
+                        The pointer shown when a mouse or trackpad is \
+                        attached is the X11 Trek Cursor, the original \
+                        cursor glyph from the X Window System (X11) \
+                        `cursor` font (`XC_trek`, glyph 142), distributed \
+                        as part of X.Org's `font-cursor-misc` package. \
+                        The package's original copyright notice states \
+                        that these glyphs are "unencumbered."
+                        """)
+
+                    section(
                         "Licensing Review",
                         """
                         The original XSky license permits copying and \
@@ -69,7 +81,7 @@ struct AboutView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { dismiss() }
+                    Button("Acknowledged") { dismiss() }
                         .accessibilityIdentifier("about.done")
                 }
             }

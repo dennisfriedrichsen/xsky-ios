@@ -13,6 +13,7 @@ struct ChartView: View {
     @State private var pinchStartViewport: ChartViewport?
     @State private var regionRect: CGRect?
     @State private var lastInteractionPoint: CGPoint = .zero
+    @State private var trekCursorPoint: CGPoint?
     @FocusState private var chartFocused: Bool
 
     var body: some View {
@@ -21,6 +22,14 @@ struct ChartView: View {
         canvas(style: style)
             .background(style.background)
             .overlay(alignment: .topLeading) { regionOverlay(style: style) }
+            // X11 Trek Cursor (XC_trek, glyph 142): original X Window
+            // System cursor font glyph, drawn in place of the system
+            // pointer while a mouse or trackpad hovers the chart. See
+            // AboutView for attribution. UIPointerInteraction has no
+            // arbitrary-image style, so the system pointer is hidden and
+            // this image tracks it instead.
+            .overlay(alignment: .topLeading) { trekCursorOverlay }
+            .hiddenSystemPointer()
             .onGeometryChange(for: CGSize.self) { proxy in
                 proxy.size
             } action: { size in
@@ -40,8 +49,10 @@ struct ChartView: View {
                     let dec = SexagesimalDec(radians: sky.declination)
                     workspace.hoverReadout =
                         "\(ra.displayString)  \(dec.displayString)"
+                    trekCursorPoint = p
                 case .ended:
                     workspace.hoverReadout = nil
+                    trekCursorPoint = nil
                 }
             }
             .focusable()
@@ -90,6 +101,22 @@ struct ChartView: View {
             var ctx = context
             CanvasChartRenderer(style: style)
                 .draw(snapshot, in: &ctx, size: size)
+        }
+    }
+
+    // The trek glyph's hotspot (tip of the ship) sits at column 4 of 9,
+    // row 0 of 16 in the source bitmap (see x11-trek.png).
+    private static let trekCursorHotSpot = CGPoint(x: 4.5, y: 0.5)
+
+    @ViewBuilder
+    private var trekCursorOverlay: some View {
+        if let p = trekCursorPoint {
+            Image("X11Trek")
+                .interpolation(.none)
+                .allowsHitTesting(false)
+                .offset(
+                    x: p.x - Self.trekCursorHotSpot.x,
+                    y: p.y - Self.trekCursorHotSpot.y)
         }
     }
 
@@ -275,4 +302,38 @@ struct ChartView: View {
         }
         return parts.joined(separator: ". ")
     }
+}
+
+extension View {
+    /// Hides the system pointer while it hovers this view, so a custom
+    /// cursor overlay can be drawn in its place.
+    fileprivate func hiddenSystemPointer() -> some View {
+        overlay(SystemPointerHidingArea().allowsHitTesting(false))
+    }
+}
+
+/// UIPointerInteraction has no arbitrary-image style; `UIPointerStyle
+/// .hidden()` is the closest public hook, so this bridges to it to hide
+/// the system pointer for `hiddenSystemPointer()`.
+private struct SystemPointerHidingArea: UIViewRepresentable {
+    final class Coordinator: NSObject, UIPointerInteractionDelegate {
+        func pointerInteraction(
+            _ interaction: UIPointerInteraction,
+            styleFor region: UIPointerRegion
+        ) -> UIPointerStyle? {
+            .hidden()
+        }
+    }
+
+    func makeCoordinator() -> Coordinator { Coordinator() }
+
+    func makeUIView(context: Context) -> UIView {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.isUserInteractionEnabled = false
+        view.addInteraction(UIPointerInteraction(delegate: context.coordinator))
+        return view
+    }
+
+    func updateUIView(_ uiView: UIView, context: Context) {}
 }

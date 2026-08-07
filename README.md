@@ -110,6 +110,13 @@ in the About screen. **A human must review the redistribution terms before
 any App Store or commercial release**; the original license forbids sale
 and requires crediting the original author.
 
+The pointer used when a mouse or trackpad is attached (`X11Trek` in
+`XSkyApp/Assets.xcassets`) is the X11 Trek Cursor, the original cursor
+glyph from the X Window System `cursor` font (`XC_trek`, glyph 142),
+distributed as part of X.Org's `font-cursor-misc` package; its upstream
+`COPYING` file describes these glyphs as "unencumbered." Attribution is
+also surfaced in the About screen.
+
 ## Known limitations and deviations
 
 - No live-sky/AR mode, location, horizon coordinates, rise/set times, or
