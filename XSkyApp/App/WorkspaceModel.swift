@@ -48,7 +48,7 @@ final class WorkspaceModel {
     }
 
     // MARK: UI state
-    var sidebarVisible = true { didSet { schedulePersist() } }
+    var sidebarVisible = false { didSet { schedulePersist() } }
     var inspectorVisible = false { didSet { schedulePersist() } }
     var regionZoomArmed = false
     var hoverReadout: String?
