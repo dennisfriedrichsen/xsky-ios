@@ -1,9 +1,11 @@
 import SwiftUI
+import UIKit
 
 /// About screen: version/build, original-author attribution, data
 /// provenance, and the licensing-review notice.
 struct AboutView: View {
     @Environment(\.dismiss) private var dismiss
+    @State private var usingOriginalIcon = UIApplication.shared.alternateIconName == "AppIcon-Original"
 
     private var version: String {
         let info = Bundle.main.infoDictionary
@@ -16,25 +18,48 @@ struct AboutView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("XSky for iPad")
-                            .font(.largeTitle.weight(.semibold))
-                        Text(version)
-                            .font(.callout.monospacedDigit())
-                            .foregroundStyle(.secondary)
-                            .accessibilityIdentifier("about.version")
-                        Text("An interactive equatorial sky atlas.")
-                            .foregroundStyle(.secondary)
+                    HStack(alignment: .top, spacing: 16) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("XSky for iPad")
+                                .font(.largeTitle.weight(.semibold))
+                            Text(version)
+                                .font(.callout.monospacedDigit())
+                                .foregroundStyle(.secondary)
+                                .accessibilityIdentifier("about.version")
+                            Text("An interactive equatorial sky atlas.")
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        OriginalIconGlyph()
+                            .frame(width: 42, height: 72)
+                            .padding(10)
+                            .background(.black, in: RoundedRectangle(cornerRadius: 10))
                     }
 
                     section(
                         "Original Author",
                         """
                         XSky is a native port of the XSky X Window System \
-                        application, copyright 1992–6 Terry R. Friedrichsen \
-                        (terry@venus.sunquest.com). The astronomical behavior, \
-                        catalog handling, and chart semantics of this app are \
-                        derived directly from that original C source.
+                        application, copyright 1992–6 Terry R. Friedrichsen. \
+                        The astronomical behavior, catalog handling, and \
+                        chart semantics of this app are derived directly \
+                        from that original C source.
+
+                        terry@venus.sunquest.com (Internet)
+                        uunet!sunquest!terry (Usenet)
+                        terry@sds.sdsc.edu (alternate address; I live in Tucson)
+                        """)
+
+                    section(
+                        "A Word of Warranty",
+                        """
+                        The original xsky shipped with this warranty: \
+                        "xsky doesn't do anything; it is not merchantable, \
+                        and it is not fit for any purpose whatsoever. In \
+                        fact, don't use xsky at all; it's free, and you're \
+                        getting what you paid for." Thirty years and a full \
+                        rewrite later, we're pleased to report that xsky \
+                        STILL doesn't do anything.
                         """)
 
                     section(
@@ -64,17 +89,45 @@ struct AboutView: View {
                         that these glyphs are "unencumbered."
                         """)
 
-                    section(
-                        "Licensing Review",
-                        """
-                        The original XSky license permits copying and \
-                        redistribution but not sale, and requires crediting \
-                        the original author. The bundled catalog data and \
-                        this application require a human licensing review \
-                        before any App Store or commercial distribution. \
-                        See ACKNOWLEDGEMENTS, Copyright.txt, and Warranty.txt \
-                        in the application bundle.
-                        """)
+                    if UIApplication.shared.supportsAlternateIcons {
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("App Icon").font(.headline)
+                            Text(
+                                """
+                                Switch to a reproduction of the original \
+                                xsky icon, a 28×48 X11 bitmap glyph from the \
+                                early 1990s.
+                                """)
+                                .font(.callout)
+                                .foregroundStyle(.secondary)
+                            Toggle("Use original xsky icon", isOn: $usingOriginalIcon)
+                                .accessibilityIdentifier("about.originalIconToggle")
+                                .onChange(of: usingOriginalIcon) { _, useOriginal in
+                                    UIApplication.shared.setAlternateIconName(
+                                        useOriginal ? "AppIcon-Original" : nil)
+                                }
+                        }
+                    }
+
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Licensing Review").font(.headline)
+                        Text(
+                            """
+                            The original XSky license permits copying and \
+                            redistribution but not sale, and requires crediting \
+                            the original author. This app is offered at no \
+                            cost in the App Store. The source and authorship \
+                            of the bundled quasi-stellar object catalog is \
+                            still being confirmed.
+                            """)
+                            .font(.callout)
+                            .foregroundStyle(.secondary)
+                        NavigationLink("View Full Licenses & Notices") {
+                            LicensesView()
+                        }
+                        .font(.callout)
+                        .accessibilityIdentifier("about.licensesLink")
+                    }
                 }
                 .padding(24)
                 .frame(maxWidth: 640, alignment: .leading)

@@ -29,6 +29,21 @@ struct InspectorView: View {
         }
         .background(Color(white: 0.05))
         .accessibilityIdentifier("inspector")
+        .gesture(dismissSwipe)
+    }
+
+    /// Swiping right (toward the pane's trailing edge, where it slides
+    /// off-screen) dismisses the inspector. Requires a mostly-horizontal
+    /// drag so it doesn't fight the ScrollView's vertical scrolling.
+    private var dismissSwipe: some Gesture {
+        DragGesture(minimumDistance: 30)
+            .onEnded { value in
+                let horizontal = value.translation.width
+                let vertical = value.translation.height
+                if horizontal > 60 && horizontal > abs(vertical) * 2 {
+                    workspace.inspectorVisible = false
+                }
+            }
     }
 
     private func header(_ details: ObjectDetails) -> some View {
