@@ -1,0 +1,601 @@
+2-br		two-branch
+2-branch	two-branch
+2-branched	two-branch
+3-br		three-branch
+3-branched	three-branch
+
+5.4m		5.4 mag
+7m		7th mag
+8m		8th mag
+8.5m		8.5 mag
+9m		9th mag
+9.5m		9.5 mag
+10m		10th mag
+10.5m		10.5 mag
+11m		11th mag
+12-15m		12th to 15th mag
+12m		12th mag
+12.5m		12.5 mag
+13m		13th mag
+13.5m		13.5 mag
+14m		14th mag
+15m		15th mag
+
+1mag		1 minute
+8mag		8 minutes
+
+1st		first
+2nd		second
+3rd		third
+4th		fourth
+5th		fifth
+6th		sixth
+7th		seventh
+8th		eighth
+9th		ninth
+12th		twelvth
+
+ADS		ADS
+Algol		Algol
+And		Andromedae
+Andromeda	Andromeda
+Ari		Arietis
+Australis	Australis
+a		a
+ab		about
+about		about
+again		again
+alm		almost
+almost		almost
+also		also
+am		among
+an		an
+and		and
+another		another
+ann		annular
+annul		annular
+annular		annular
+anything	anything
+apart		apart
+apparently	apparently
+appendages	appendages
+ar		around
+arc		arc
+arms		arms
+around		around
+at		at
+att		attached
+axis		axis
+
+B		bright
+Birr		Birr Castle
+Borealis	Borealis
+b		brighter
+band		band
+beautiful	beautiful
+bet		between
+beta		beta
+bf		brightest to following side
+biN		binuclear
+bifid		bifid
+bifurcated	bifurcated
+black		black
+blue		blue
+bmBN		brighter in the middle to a bright nucleus
+bn		brightest to north side
+border		border
+both		both
+bp		brightest to preceding side
+br		branch
+branch		branch
+branches	branches
+brighter	brighter
+brightest	brightest
+brightness	brightness
+brush		brush
+bs		brightest to south side
+but		but
+by		by
+
+C		compressed
+CBr		Coronae Borealis
+CMa		Canis Majoris
+CVn		Canum Venaticorum
+Car		Carinae
+Cas		Cassiopeiae
+Cen		Centauri
+Cyg		Cygni
+Cl		cluster
+Cru		Crucis
+Cyg		Cygni
+c		considerably
+centre		center
+certain		certain
+chev		chevelure
+chief		chief
+chiefly		chiefly
+circle		circle
+cl.		cluster
+close		close
+cloud		cloud
+cluster		cluster
+clusters	clusters
+co		coarse(ly)
+coarse		coarse
+com		comet-like form
+comet		comet
+cometary	cometary
+cometic		cometic
+comp		companion
+condens		condensations
+condensed	condensed
+conn		connected
+connnected	connected
+connecting	connecting
+cont		in contact
+corner		corner
+couple		couple
+curve		curve
+curved		curved
+
+D		double
+D*		double star
+Dumbbell	Dumbbell
+d		diameter
+decl		declination
+def		defined
+defect		defect
+deg		degrees
+delta		delta
+dense		dense
+densest		densest
+descr		description
+descrip		description
+description	description
+diam		diameter
+dif		diffuse
+diff		diffuse
+different	different
+diffi		difficult
+diffic		difficult
+difficult	difficult
+diffused	diffused
+disc		disk
+dist		distan(t)(ce)
+distant		distant
+distinct	distinct
+double		double
+doubtful	doubtful
+dozen		dozen
+
+E		extended
+e		extremely
+each		each
+edge		edge
+ee		most extremely
+ellipt		elliptical
+elliptic	elliptical
+end		end
+ends		ends
+epsilon		epsilon
+equilateral	equilateral
+er		easily resolvable
+eta		eta
+evidently	evidently
+exc		eccentric
+excent		eccentric
+excentr		eccentric
+excentric	eccentric
+extend		extend
+extends		extends
+
+F		faint
+f		following (eastward)
+faint		faint
+fainter		fainter
+faintest	faintest
+falcate		falcate
+fan		fan
+fan-sh		fan-shaped
+fan-shape	fan-shaped
+fan-shaped	fan-shaped
+farther		farther
+few		few
+field		field
+fine		fine
+follows		follows
+forming		forming
+forms		forms
+found		found
+from		from
+
+Grb		Grb
+Great		Great
+g		gradually
+gamma		gamma
+gaseous		gaseous
+gbm		gradually brighter in the middle
+glb		gradually little brighter
+glob.		globular
+gmpCM		gradually much compressed in the middle
+gr		group
+great		great
+greater		greater
+group		group
+groups		groups
+
+Hya		Hydrae
+half		half
+has		has
+hazy		hazy
+hole		hole
+hook		hook
+hooked		hooked
+
+IC		IC
+i		irregular
+iF		irregular figure
+if		if
+ill-defined	ill-defined
+in		in
+incl		include(s)(ed)(ing)
+indistinct	indistinct
+inv		involv(ed)(ing)
+irr		irregular
+is		is
+it		it
+
+kappa		kappa
+knots		knots
+
+L		large
+LMC		Large Magellanic Cloud
+Leo		Leonis
+Lyra		Lyra
+l		(little)(long)
+lC		little compressed
+lE		little extended
+lRi		little rich
+lambda		lambda
+larger		larger
+last		last
+lbM		little brighter in the middle
+lbm		little brighter in the middle
+least		least
+like		like
+line		line
+little		little
+long		long
+looks		looks
+looped		looped
+
+M		(in the) middle
+M1		Messier 1
+M2		Messier 2
+M3		Messier 3
+M4		Messier 4
+M5		Messier 5
+M6		Messier 6
+M7		Messier 7
+M8		Messier 8
+M9		Messier 9
+M11		Messier 11
+M13		Messier 13
+M16		Messier 16
+M17		Messier 17
+M18		Messier 18
+M19		Messier 19
+M20		Messier 20
+M21		Messier 21
+M23		Messier 23
+M25		Messier 25
+M26		Messier 26
+M27		Messier 27
+M29		Messier 29
+M30		Messier 30
+M31		Messier 31
+M32		Messier 32
+M33		Messier 33
+M34		Messier 34
+M35		Messier 35
+M36		Messier 36
+M37		Messier 37
+M38		Messier 38
+M39		Messier 39
+M41		Messier 41
+M42		Messier 42
+M43		Messier 43
+M44		Messier 44
+M46		Messier 46
+M47		Messier 47
+M48		Messier 48
+M49		Messier 49
+M50		Messier 50
+M51		Messier 51
+M52		Messier 52
+M53		Messier 53
+M54		Messier 54
+M57		Messier 57
+M58		Messier 58
+M59		Messier 59
+M60		Messier 60
+M61		Messier 61
+M62		Messier 62
+M63		Messier 63
+M64		Messier 64
+M65		Messier 65
+M66		Messier 66
+M67		Messier 67
+M68		Messier 68
+M69		Messier 69
+M70		Messier 70
+M71		Messier 71
+M72		Messier 72
+M73		Messier 73
+M74		Messier 74
+M75		Messier 75
+M76		Messier 76
+M77		Messier 77
+M78		Messier 78
+M79		Messier 79
+M81		Messier 81
+M82		Messier 82
+M83		Messier 83
+M84		Messier 84
+M85		Messier 85
+M86		Messier 86
+M87		Messier 87
+M88		Messier 88
+M89		Messier 89
+M90		Messier 90
+M91		Messier 91
+M92		Messier 92
+M93		Messier 93
+M94		Messier 94
+M95		Messier 95
+M96		Messier 96
+M97		Messier 97
+M98		Messier 98
+M99		Messier 99
+M100		Messier 100
+M101		Messier 101
+M103		Messier 103
+M104		Messier 104
+M105		Messier 105
+M106		Messier 106
+M107		Messier 107
+M108		Messier 108
+M109		Messier 109
+M110		Messier 110
+Maia		Maia
+Merope		Merope
+Milky		Milky
+Mon		Monocerotis
+m		(much)(magnitude)
+mC		much compressed
+mE		much extended
+mag		mag
+makes		makes
+many		many
+mb		much brighter
+mbM		much brighter in the middle
+more		more
+mottled		mottled
+mu		mu
+mult		multiple
+
+N		(to a) nucleus
+Neb		Nebula
+Nf		north following
+Nor		Normae
+Nucl		nucleus
+Nuclei		nuclei
+n		north
+narrow		narrow
+near		near
+nearly		nearly
+neb		nebula(e)
+nebs		nebulous
+nebula		nebula
+nebulosity	nebulosity
+nebulous	nebulous
+neby		nebulosity
+nf		north following
+nnf		north-north following
+nnp		north-north preceding
+no		no
+nonexistent	nonexistent
+north		north
+not		not
+np		north preceding
+ns		north-south
+nr		near
+nu2		nu-2
+
+Oph		Ophiuchi
+Ori		Orionis
+object		object
+oblong		oblong
+of		of
+omega		omega
+on		on
+one		one
+only		only
+or		or
+other		other
+others		others
+oval		oval
+
+P		sparse
+PN		planetary nebula
+Praesepe	Praesepe
+Psc		Piscium
+Pleiades	Pleiades
+Polarissima	Polarissima
+Psc		Piscium
+pB		pretty bright
+pC		pretty compressed
+pE		pretty extended
+pF		pretty faint
+pL		pretty large
+pRi		pretty rich
+pS		pretty small
+p		preceding (westward)
+pair		pair
+par		parallel
+parallel	parallel
+part		part
+partly		partly
+patch		patch
+patches		patches
+pb		pretty bright
+perh		perhaps
+perhaps		perhaps
+perpendicular	perpendicular
+pf		preceding-following
+pg		pretty gradually
+photosphere	photosphere
+pl		pretty long
+plE		pretty little extended
+place		place
+plan		planetary nebula
+plate		plate
+pm		pretty much
+pointed		pointed
+points		points
+poor		poor
+portion		portion
+pos		position
+poss		possibly
+possibly	possibly
+ps		pretty suddenly
+plan		planetary nebula
+prob		probably
+probably	probably
+pt		point
+pts		points
+
+quite		quite
+
+R		round
+RA		right ascension
+RR		exactly round
+Ri		rich
+r		resolvable
+ray		ray
+res		resolved
+resolved	resolved
+requires	requires
+ring		ring
+row		row
+rough		rough
+rr		partially resolved
+rrr		well resolved
+ruby		ruby
+
+S		small
+S*		faint star
+SMC		Small Magellanic Cloud
+Sco		Scorpii
+s		(suddenly)(south)
+same		same
+sc		scattered
+second		second
+seems		seems
+seen		seen
+segment		segment
+semi-stellar	semi-stellar
+sf		south following
+sharp		sharp
+shape		shape
+shaped		shaped
+sic		sic
+side		side
+slightly	slightly
+small		small
+smaller		smaller
+so		so
+south		south
+sp		south preceding
+spectrum	spectrum
+spindle		spindle
+spir		spiral
+spiral		spiral
+sev		several
+several		several
+ssF		south-south following
+ssf		south-south following
+ssp		south-south preceding
+st		stars
+star		star
+stars		stars
+stell		stellar
+stellar		stellar
+straight	straight
+streak		streak
+strongly	strongly
+suddenly	suddenly
+surr		surround(ed)(ing)
+surrounds	surrounds
+susp		suspected
+suspected	suspected
+
+tail		tail
+tails		tails
+taken		taken
+than		than
+that		that
+the		the
+theta		theta
+theta1		theta-1
+time		time
+to		to
+together	together
+trace		trace
+trail		trail
+train		train
+trap		trapezium
+trapez		trapezium
+trapezium	trapezium
+triN		trinuclear
+triangle	triangle
+triangular	triangular
+trifid		trifid
+triple		triple
+two		two
+
+undefined	undefined
+
+Vel		Velorum
+Vir		Virginis
+v		very
+var		variable
+variable	variable
+verified	verified
+verification	verification
+very		very
+vlc		very little compressed
+vmi		very much irregular
+vv		very very
+
+Way		Way
+well		well
+which		which
+wide		wide
+wings		wings
+wisp		wisp
+wisps		wisps
+with		with
+without		without
+within		within
+
+zeta		zeta
+zigzags		zigzags
+
+*		star
+**		double star
+***		triple star
+
+!		remarkable
+!!		very remarkable
+!!!		magnificent or interesting

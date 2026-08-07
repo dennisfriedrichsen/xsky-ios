@@ -1,0 +1,8 @@
+/*
+ * WARRANTY:
+ * xsky was written as a learning project and as a demonstration of
+ * X Window System programming.  xsky doesn't do anything; it is not
+ * merchantable, and it is not fit for any purpose whatsoever.  In
+ * fact, don't use xsky at all; it's free, and you're getting what
+ * you paid for.
+ */

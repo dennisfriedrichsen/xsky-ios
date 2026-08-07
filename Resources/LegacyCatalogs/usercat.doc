@@ -1,0 +1,52 @@
+				Usercat.DOC
+
+
+This document describes  the format of  the user-defined catalog, which must
+be in a file called  "usercat.dat" located in the directory specified by the
+environment variable "USER_PATH".
+
+The first  record in the catalog is the name of the catalog itself; the only
+use made  of this information  is in generating headings  for the PostScript
+printable  representation of the sky display  via the  "Chart" button.  This
+name may be up to 80 characters in length.
+
+The second record in the catalog is the epoch of the object positions.  This
+line will  usually be  the current  year or  one  of "2000.0",  "1950.0", or
+"1975.0".
+
+The remainder of the catalog consists of one record per user-defined object;
+the catalog can  define up to  200 objects.  Each record is composed of four
+fields, delimited by backslashes.
+
+The first field is some sort of user-specified object number; this number is
+the ultimate identification  of this object inside xsky, and  therefore must
+be  unique.  If this  field is  missing  (the  user  record  begins  with  a
+backslash),  xsky  will generate  sequential object numbers beginning at  1.
+The value of  this field must  be in the range  0 - 65535.  A user-requested
+"Find" action can specify  the value in  this field, and this number will be
+used to generate an object label if no label is given in the third field.
+
+The  second field  is the position of the object,  in RA and declination, at
+the epoch given by the second record of the catalog.  The general format is
+
+		nnh nnm nns.nnn, snnd nn' nn".nn
+
+with the value before the comma being RA in  hours,  minutes, and seconds of
+time (specifiable  to thousandths), and  the  value after  the  comma  being
+declination in signed  degrees,  minutes, and seconds of arc (specifiable to
+hundredths).  Leading zeroes  in any field  may be  suppressed, and unneeded
+decimals (including the decimal point itself) may be omitted.  This field is
+required.
+
+The third field is the label of the object, which xsky will use whenever the
+user  executes  the pointer action for object label generation.  The  labels
+will  also be searched  when the  user  attempts to "Find"  an object.  This
+field may be  up to 20 characters in length; if it is unspecified,  the user
+number will be  used as the object label.  Do not leave this field empty; if
+no label is supplied, put at least one blank in this field.
+
+The  fourth and  final field  is  the object  description.   This field  may
+contain  arbitrary text up to 400 characters  in length.  This  text will be
+formatted and displayed when the user executes the pointer action for object
+catalog description.
+

@@ -1,0 +1,3 @@
+Test Catalog
+2000.0
+1\5h 39m 0s.0, -01d 12' 07"\Test Object\This is a test object for the usercat; I added a like really long description because I really wanted to test out the code in user.c that splits this into lines of 80 columns or less to fit in the display label associated with the user-defined object on this line of the catalog

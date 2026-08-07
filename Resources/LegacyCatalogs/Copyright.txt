@@ -1,0 +1,14 @@
+/*
+ * xsky - an interactive sky atlas
+ *
+ * Copyright 1992-6, Terry R. Friedrichsen
+ *
+ * This program may be copied and redistributed, in whole or in part,
+ * as long as you don't try to make any money from the sale or redis-
+ * tribution of the program or any part of the program, or pretend
+ * that you wrote the program or any of its parts unless specifically
+ * credited by the original author.
+ *
+ * You are free to make use of this software in your own programs, as
+ * long as you credit the original author where it is due.
+ */

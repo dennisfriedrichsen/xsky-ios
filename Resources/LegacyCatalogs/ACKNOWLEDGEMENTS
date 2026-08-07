@@ -1,0 +1,52 @@
+ACKNOWLEDGEMENTS:
+
+
+Thanks are due to the National Space Sciences Data Center for the original
+versions of the object catalogs which have been abridged for use of the
+xsky program.
+
+Thanks also to PC Leyland, who provided a BASIC program called PRECESS.BAS,
+from which I extracted the algorithm and constants used in the precession
+code.
+
+A big thanks to Jim Sharpe, who was the original beta tester and made sure
+xsky worked on HP and SGI machines.  He also provided a number of useful
+suggestions for improving the utility of the user interface.
+
+The handling of larger catalogs, such as SAO, was speeded up greatly by
+Brian Wing, who wrote a routine to pre-screen objects for inclusion in the
+display while avoiding a lot of spherical trigonometry.  Only after an
+object passes Brian's quick test does it fall into the normal code, which
+does a definitive, but compute-intensive, analysis.  This hack speeds up
+the SAO catalog at the default display scale by a factor of fifteen, giving
+two-second update times on my DECstation 5000/200.
+
+Bill Owen at JPL and Mike Delevoryas pointed me to Nancy G. Roman's paper
+in PASP which described a clever method of determining the constellation
+containing a given point on the sky.  Bill Owen was also kind enough to
+track down the correct values after I discovered an error in the constel-
+lation boundary data as distributed by NASA ADC.
+
+Finally, thanks to Jean Meeus for writing "Astronomical Algorithms", pub-
+lished by Wilmann-Bell.  The clear equations he provides replaced a fair
+amount of my own grungy spherical trigonometry.
+
+Let me take this opportunity to say something about free software on the net.
+I've benefitted greatly over the years from free software, and so has xsky.
+
+A)  EMACS is merely *the* editor (thanks, RMS)
+
+B)  ups is the debugger of choice; writing xsky would have been much harder
+	without it (thanks, Mark Russell)
+
+C)  and, of course, xsky would have been impossible without X11 and the
+	Athena widgets from MIT (thanks to lots of people)
+
+So xsky is free to pay back the net.community for many years of helping me.
+Thanks, folks.
+
+Terry R. Friedrichsen
+
+terry@venus.sunquest.com  (Internet)
+uunet!sunquest!terry      (Usenet)
+terry@sds.sdsc.edu        (alternate address; I live in Tucson)
