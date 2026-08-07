@@ -1,0 +1,504 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A1000001000000000000C0RE /* XSkyCore in Frameworks */ = {isa = PBXBuildFile; productRef = A1000002000000000000C0RE /* XSkyCore */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A100001100000000000PROXY /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A10000000000000000PROJCT /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A1000010000000000000APPT;
+			remoteInfo = XSky;
+		};
+		A100001200000000000PROXY /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A10000000000000000PROJCT /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A1000010000000000000APPT;
+			remoteInfo = XSky;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		A1000020000000000000APPP /* XSky.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XSky.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1000021000000000TESTPRD /* XSkyAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XSkyAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1000022000000000UITSPRD /* XSkyAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XSkyAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		A1000030000000000APPGRPX /* XSkyApp */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = XSkyApp;
+			sourceTree = "<group>";
+		};
+		A1000031000000000RESGRPX /* Resources/LegacyCatalogs */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Resources/LegacyCatalogs;
+			sourceTree = "<group>";
+		};
+		A1000032000000000TSTGRPX /* XSkyAppTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = XSkyAppTests;
+			sourceTree = "<group>";
+		};
+		A1000033000000000UITGRPX /* XSkyAppUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = XSkyAppUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A1000040000000000FRAMEWK /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000001000000000000C0RE /* XSkyCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1000041000000000FRAMEWK /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1000042000000000FRAMEWK /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A1000050000000000MAINGRP = {
+			isa = PBXGroup;
+			children = (
+				A1000030000000000APPGRPX /* XSkyApp */,
+				A1000031000000000RESGRPX /* Resources/LegacyCatalogs */,
+				A1000032000000000TSTGRPX /* XSkyAppTests */,
+				A1000033000000000UITGRPX /* XSkyAppUITests */,
+				A1000051000000000PRODGRP /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A1000051000000000PRODGRP /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A1000020000000000000APPP /* XSky.app */,
+				A1000021000000000TESTPRD /* XSkyAppTests.xctest */,
+				A1000022000000000UITSPRD /* XSkyAppUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A1000010000000000000APPT /* XSky */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1000060000000000CFGLAPP /* Build configuration list for PBXNativeTarget "XSky" */;
+			buildPhases = (
+				A1000070000000000SOURCES /* Sources */,
+				A1000040000000000FRAMEWK /* Frameworks */,
+				A1000080000000000RESRCES /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A1000030000000000APPGRPX /* XSkyApp */,
+				A1000031000000000RESGRPX /* Resources/LegacyCatalogs */,
+			);
+			name = XSky;
+			packageProductDependencies = (
+				A1000002000000000000C0RE /* XSkyCore */,
+			);
+			productName = XSky;
+			productReference = A1000020000000000000APPP /* XSky.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A1000011000000000TESTTGT /* XSkyAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1000061000000000CFGLTST /* Build configuration list for PBXNativeTarget "XSkyAppTests" */;
+			buildPhases = (
+				A1000071000000000SOURCES /* Sources */,
+				A1000041000000000FRAMEWK /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A1000090000000000TDEPEND /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A1000032000000000TSTGRPX /* XSkyAppTests */,
+			);
+			name = XSkyAppTests;
+			packageProductDependencies = (
+			);
+			productName = XSkyAppTests;
+			productReference = A1000021000000000TESTPRD /* XSkyAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		A1000012000000000UITSTGT /* XSkyAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1000062000000000CFGLUIT /* Build configuration list for PBXNativeTarget "XSkyAppUITests" */;
+			buildPhases = (
+				A1000072000000000SOURCES /* Sources */,
+				A1000042000000000FRAMEWK /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A1000091000000000TDEPEND /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A1000033000000000UITGRPX /* XSkyAppUITests */,
+			);
+			name = XSkyAppUITests;
+			packageProductDependencies = (
+			);
+			productName = XSkyAppUITests;
+			productReference = A1000022000000000UITSPRD /* XSkyAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A10000000000000000PROJCT /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					A1000011000000000TESTTGT = {
+						TestTargetID = A1000010000000000000APPT;
+					};
+					A1000012000000000UITSTGT = {
+						TestTargetID = A1000010000000000000APPT;
+					};
+				};
+			};
+			buildConfigurationList = A1000063000000000CFGLPRJ /* Build configuration list for PBXProject "XSky" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A1000050000000000MAINGRP;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A10000030000000000PKGREF /* XCLocalSwiftPackageReference "Packages/XSkyCore" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = A1000051000000000PRODGRP /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A1000010000000000000APPT /* XSky */,
+				A1000011000000000TESTTGT /* XSkyAppTests */,
+				A1000012000000000UITSTGT /* XSkyAppUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A1000080000000000RESRCES /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A1000070000000000SOURCES /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1000071000000000SOURCES /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1000072000000000SOURCES /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A1000090000000000TDEPEND /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A1000010000000000000APPT /* XSky */;
+			targetProxy = A100001100000000000PROXY /* PBXContainerItemProxy */;
+		};
+		A1000091000000000TDEPEND /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A1000010000000000000APPT /* XSky */;
+			targetProxy = A100001200000000000PROXY /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		A10000A0000000000PRJDBGC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		A10000A1000000000PRJRELC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A10000A2000000000APPDBGC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = T5MRHCWRRV;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
+				INFOPLIST_KEY_UIStatusBarHidden = NO;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.friedrichsenweb.com.xsky;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A10000A3000000000APPRELC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = T5MRHCWRRV;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
+				INFOPLIST_KEY_UIStatusBarHidden = NO;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.friedrichsenweb.com.xsky;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A10000A4000000000TSTDBGC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dennisfriedrichsen.xsky.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/XSky.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/XSky";
+			};
+			name = Debug;
+		};
+		A10000A5000000000TSTRELC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dennisfriedrichsen.xsky.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/XSky.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/XSky";
+			};
+			name = Release;
+		};
+		A10000A6000000000UITDBGC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dennisfriedrichsen.xsky.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = XSky;
+			};
+			name = Debug;
+		};
+		A10000A7000000000UITRELC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dennisfriedrichsen.xsky.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = XSky;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A1000060000000000CFGLAPP /* Build configuration list for PBXNativeTarget "XSky" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000A2000000000APPDBGC /* Debug */,
+				A10000A3000000000APPRELC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1000061000000000CFGLTST /* Build configuration list for PBXNativeTarget "XSkyAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000A4000000000TSTDBGC /* Debug */,
+				A10000A5000000000TSTRELC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1000062000000000CFGLUIT /* Build configuration list for PBXNativeTarget "XSkyAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000A6000000000UITDBGC /* Debug */,
+				A10000A7000000000UITRELC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1000063000000000CFGLPRJ /* Build configuration list for PBXProject "XSky" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000A0000000000PRJDBGC /* Debug */,
+				A10000A1000000000PRJRELC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		A10000030000000000PKGREF /* XCLocalSwiftPackageReference "Packages/XSkyCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/XSkyCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A1000002000000000000C0RE /* XSkyCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = XSkyCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = A10000000000000000PROJCT /* Project object */;
+}

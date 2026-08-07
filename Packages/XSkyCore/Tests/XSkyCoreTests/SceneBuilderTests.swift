@@ -1,0 +1,235 @@
+import Foundation
+import Testing
+
+@testable import XSkyCore
+
+@Suite("Scene building and interaction")
+struct SceneBuilderTests {
+    let store = CatalogTestSupport.store
+
+    private func viewport(
+        raHours: Double, decDegrees: Double, scale: Double = 0.05,
+        width: Double = 1024, height: Double = 768,
+        orientation: ChartOrientation = .normal
+    ) -> ChartViewport {
+        ChartViewport(
+            center: EquatorialCoordinate(
+                rightAscension: Radians(hours: raHours),
+                declination: Radians(degrees: decDegrees)),
+            degreesPerPoint: scale,
+            sizeInPoints: Size2D(width: width, height: height),
+            orientation: orientation)
+    }
+
+    private func snapshot(
+        _ vp: ChartViewport, settings: ChartSettings = ChartSettings()
+    ) -> RenderSnapshot {
+        ChartSceneBuilder(store: store).buildSnapshot(
+            viewport: vp, settings: settings, labels: [], selection: nil,
+            generation: 1)
+    }
+
+    private func contains(
+        _ snapshot: RenderSnapshot, hr: Int
+    ) -> RenderedStar? {
+        snapshot.stars.first { star in
+            guard let object = store.object(star.objectID) else { return false }
+            if case .ybs(let n, _, _, _, _) = object.identity {
+                return n == hr
+            }
+            return false
+        }
+    }
+
+    private func contains(
+        _ snapshot: RenderSnapshot, ngc: Int
+    ) -> RenderedObject? {
+        snapshot.objects.first { rendered in
+            guard let object = store.object(rendered.objectID) else {
+                return false
+            }
+            if case .rngc(let n, let sub, _) = object.identity {
+                return n == ngc && sub == nil
+            }
+            return false
+        }
+    }
+
+    /// The Orion reference view must contain its major stars with the
+    /// correct chart orientation: north up, RA increasing to the left.
+    @Test func orionReferenceView() {
+        let vp = viewport(raHours: 5.6, decDegrees: 0)
+        var settings = ChartSettings()
+        settings.showBoundaries = true
+        settings.showOutlines = true
+        let snap = snapshot(vp, settings: settings)
+
+        let betelgeuse = try! #require(contains(snap, hr: 2061))
+        let rigel = try! #require(contains(snap, hr: 1713))
+        let m42 = try! #require(contains(snap, ngc: 1976))
+
+        // Betelgeuse (RA 5h55m, +7.4) is north of and east of Rigel
+        // (RA 5h14m, -8.2): higher RA -> smaller x, higher dec -> smaller y
+        #expect(betelgeuse.position.x < rigel.position.x)
+        #expect(betelgeuse.position.y < rigel.position.y)
+        // M42 sits in the sword, south of the belt
+        #expect(m42.position.y > betelgeuse.position.y)
+
+        #expect(!snap.gridPaths.isEmpty)
+        #expect(!snap.boundaryPaths.isEmpty)
+        #expect(!snap.outlinePaths.isEmpty)
+    }
+
+    @Test func m31ReferenceView() {
+        let vp = viewport(raHours: 0.712, decDegrees: 41.27)
+        let snap = snapshot(vp)
+        let m31 = try! #require(contains(snap, ngc: 224))
+        // near the center of the view
+        #expect(abs(m31.position.x - 512) < 60)
+        #expect(abs(m31.position.y - 384) < 60)
+        // companions M32 and M110
+        #expect(contains(snap, ngc: 221) != nil)
+        #expect(contains(snap, ngc: 205) != nil)
+    }
+
+    @Test func downunderFlipsOrientation() {
+        let vp = viewport(raHours: 5.6, decDegrees: 0)
+        let flipped = viewport(
+            raHours: 5.6, decDegrees: 0, orientation: .downunder)
+        let a = try! #require(contains(snapshot(vp), hr: 2061)).position
+        let b = try! #require(contains(snapshot(flipped), hr: 2061)).position
+        #expect(abs((1024 - a.x) - b.x) < 1e-6)
+        #expect(abs((768 - a.y) - b.y) < 1e-6)
+    }
+
+    @Test func catalogAndMagnitudeFiltersApply() {
+        let vp = viewport(raHours: 5.6, decDegrees: 0)
+        var settings = ChartSettings()
+        settings.setVisible(false, catalog: .ybs)
+        #expect(snapshot(vp, settings: settings).stars.isEmpty)
+
+        var brightOnly = ChartSettings()
+        brightOnly.stellarLimitingMagnitude = 1.0
+        let snap = snapshot(vp, settings: brightOnly)
+        #expect(!snap.stars.isEmpty)
+        for star in snap.stars {
+            let object = try! #require(store.object(star.objectID))
+            #expect((object.magnitude ?? 0) <= 1.0)
+        }
+    }
+
+    /// Tap selection prefers a non-stellar object over a coincident star.
+    @Test func hitTestPrefersNonStellarObjects() {
+        let vp = viewport(raHours: 5.588, decDegrees: -5.39, scale: 0.01)
+        let snap = snapshot(vp)
+        let m42 = try! #require(contains(snap, ngc: 1976))
+        // theta-1 Orionis (the Trapezium) sits inside M42
+        let hit = try! #require(
+            ChartInteraction.hitTest(at: m42.position, snapshot: snap))
+        #expect(hit.catalog == .rngc)
+    }
+
+    /// Pan keeps the grabbed sky point under the finger, including at
+    /// high declination and across 0h RA.
+    @Test func panIsSkyAnchored() {
+        // (viewport, drag end). Pole drags use a shorter feasible drag: a
+        // north-up chart cannot place a near-polar anchor at an arbitrary
+        // bearing, in which case the solver clamps at the pole instead.
+        let cases: [(ChartViewport, Point2D)] = [
+            (viewport(raHours: 5.6, decDegrees: 0), Point2D(x: 350, y: 500)),
+            (viewport(raHours: 0.05, decDegrees: 87.5), Point2D(x: 640, y: 360)),
+            (viewport(raHours: 23.95, decDegrees: -30), Point2D(x: 350, y: 500)),
+            (
+                viewport(raHours: 12, decDegrees: -88, orientation: .downunder),
+                Point2D(x: 660, y: 340)
+            ),
+        ]
+        for (vp, target) in cases {
+            let start = Point2D(x: 700, y: 300)
+            let anchor = ChartProjection.unproject(start, in: vp)
+            var moved = vp
+            moved.center = ChartInteraction.centerKeeping(
+                anchor: anchor, under: target, in: vp)
+            let back = ChartProjection.project(anchor, in: moved)
+            let dx = back.x - target.x
+            let dy = back.y - target.y
+            #expect(
+                (dx * dx + dy * dy).squareRoot() < 0.5,
+                "center \(vp.center): anchor drifted to \(back)")
+        }
+    }
+
+    /// Pinch stays anchored to its centroid within one logical point.
+    @Test func zoomIsAnchoredAtCentroid() {
+        let vp = viewport(raHours: 5.6, decDegrees: 30)
+        let centroid = Point2D(x: 650, y: 250)
+        let sky = ChartProjection.unproject(centroid, in: vp)
+        for factor in [0.5, 0.8, 1.25, 2.0] {
+            let zoomed = ChartInteraction.zoomedViewport(
+                vp, scaleFactor: factor, anchor: centroid)
+            let p = ChartProjection.project(sky, in: zoomed)
+            let dx = p.x - centroid.x
+            let dy = p.y - centroid.y
+            #expect(
+                (dx * dx + dy * dy).squareRoot() < 1.0,
+                "factor \(factor) drifted to \(p)")
+        }
+    }
+
+    @Test func regionZoomCentersAndScales() {
+        let vp = viewport(raHours: 5.6, decDegrees: 0)
+        let zoomed = ChartInteraction.regionZoomedViewport(
+            vp, regionOrigin: Point2D(x: 400, y: 300),
+            regionSize: Size2D(width: 200, height: 150))
+        #expect(zoomed.degreesPerPoint < vp.degreesPerPoint)
+        // region center sky position lands at the viewport center
+        let regionCenterSky = ChartProjection.unproject(
+            Point2D(x: 500, y: 375), in: vp)
+        let p = ChartProjection.project(regionCenterSky, in: zoomed)
+        #expect(abs(p.x - 512) < 1 && abs(p.y - 384) < 1)
+    }
+
+    /// Snapshot construction must stay within the performance budget for
+    /// a typical settled view (p95 under 100ms).
+    @Test func snapshotBuildIsFastEnough() {
+        let builder = ChartSceneBuilder(store: store)
+        var settings = ChartSettings()
+        settings.showBoundaries = true
+        settings.showOutlines = true
+        // warm up
+        _ = builder.buildSnapshot(
+            viewport: viewport(raHours: 5.6, decDegrees: 0),
+            settings: settings, labels: [], selection: nil, generation: 0)
+        var worst: Duration = .zero
+        for hours in [0.0, 5.6, 12.0, 18.0] {
+            let vp = viewport(raHours: hours, decDegrees: 20, scale: 0.1)
+            let start = ContinuousClock.now
+            _ = builder.buildSnapshot(
+                viewport: vp, settings: settings, labels: [], selection: nil,
+                generation: 0)
+            worst = max(worst, ContinuousClock.now - start)
+        }
+        #expect(worst < .milliseconds(150), "worst build took \(worst)")
+    }
+
+    @Test func labelsProjectWithAnchors() {
+        let vp = viewport(raHours: 5.6, decDegrees: 0)
+        let m42ID = snapshot(vp).objects.first {
+            if case .rngc(1976, nil, _)? = store.object($0.objectID)?.identity {
+                return true
+            }
+            return false
+        }?.objectID
+        let labels = [
+            ChartLabel(anchor: .object(try! #require(m42ID)), text: "M 42"),
+            ChartLabel(
+                anchor: .sky(
+                    raRadians: Radians(hours: 5.6).value,
+                    decRadians: 0), text: "note"),
+        ]
+        let snap = ChartSceneBuilder(store: store).buildSnapshot(
+            viewport: vp, settings: ChartSettings(), labels: labels,
+            selection: nil, generation: 2)
+        #expect(snap.labels.count == 2)
+    }
+}

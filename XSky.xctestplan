@@ -1,0 +1,31 @@
+{
+  "configurations" : [
+    {
+      "id" : "8A2B9C64-0000-4000-8000-000000000001",
+      "name" : "Default",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:XSky.xcodeproj",
+        "identifier" : "A1000011000000000TESTTGT",
+        "name" : "XSkyAppTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:XSky.xcodeproj",
+        "identifier" : "A1000012000000000UITSTGT",
+        "name" : "XSkyAppUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
