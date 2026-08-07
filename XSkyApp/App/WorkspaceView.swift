@@ -6,9 +6,12 @@ import XSkyCore
 /// NavigationSplitView) for deterministic chart sizing.
 struct WorkspaceView: View {
     @Environment(WorkspaceModel.self) private var workspace
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @State private var showAbout = false
     @State private var showImporter = false
     @FocusState private var searchFocused: Bool
+
+    private var isCompact: Bool { horizontalSizeClass == .compact }
 
     var body: some View {
         let style = ChartStyle(display: workspace.display)
@@ -17,14 +20,14 @@ struct WorkspaceView: View {
             toolbar(style: style)
             Divider().background(Color(white: 0.2))
             HStack(spacing: 0) {
-                if workspace.sidebarVisible {
+                if !isCompact && workspace.sidebarVisible {
                     SidebarView(showImporter: $showImporter)
                         .frame(width: 300)
                         .transition(.move(edge: .leading))
                     Divider().background(Color(white: 0.2))
                 }
                 chartArea
-                if workspace.inspectorVisible {
+                if !isCompact && workspace.inspectorVisible {
                     Divider().background(Color(white: 0.2))
                     InspectorView()
                         .frame(width: 340)
@@ -38,6 +41,18 @@ struct WorkspaceView: View {
         .tint(style.uiTint)
         .environment(\.chartStyle, style)
         .task { await workspace.start() }
+        .sheet(isPresented: sidebarSheetBinding) {
+            SidebarView(showImporter: $showImporter)
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+                .preferredColorScheme(.dark)
+        }
+        .sheet(isPresented: inspectorSheetBinding) {
+            InspectorView()
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+                .preferredColorScheme(.dark)
+        }
         .sheet(isPresented: $showAbout) { AboutView() }
         .fileImporter(
             isPresented: $showImporter,
@@ -96,9 +111,109 @@ struct WorkspaceView: View {
             set: { if !$0 { workspace.importDiagnostics = nil } })
     }
 
+    private var sidebarSheetBinding: Binding<Bool> {
+        Binding(
+            get: { isCompact && workspace.sidebarVisible },
+            set: { if !$0 { workspace.sidebarVisible = false } })
+    }
+
+    private var inspectorSheetBinding: Binding<Bool> {
+        Binding(
+            get: { isCompact && workspace.inspectorVisible },
+            set: { if !$0 { workspace.inspectorVisible = false } })
+    }
+
     // MARK: toolbar
 
+    @ViewBuilder
     private func toolbar(style: ChartStyle) -> some View {
+        if isCompact {
+            compactToolbar(style: style)
+        } else {
+            regularToolbar(style: style)
+        }
+    }
+
+    private func compactToolbar(style: ChartStyle) -> some View {
+        @Bindable var workspace = workspace
+        return HStack(spacing: 10) {
+            Button {
+                withAnimation(.easeOut(duration: 0.15)) {
+                    workspace.sidebarVisible.toggle()
+                }
+            } label: {
+                Image(systemName: "sidebar.leading")
+            }
+            .help("Toggle sidebar")
+            .accessibilityLabel("Toggle sidebar")
+            .accessibilityIdentifier("toolbar.sidebar")
+
+            SearchField(focused: $searchFocused)
+                .frame(maxWidth: .infinity)
+
+            Button {
+                workspace.zoomStep(in: true)
+            } label: {
+                Image(systemName: "plus.magnifyingglass")
+            }
+            .help("Zoom in")
+            .accessibilityLabel("Zoom in")
+            .accessibilityIdentifier("toolbar.zoomIn")
+
+            Button {
+                workspace.zoomStep(in: false)
+            } label: {
+                Image(systemName: "minus.magnifyingglass")
+            }
+            .help("Zoom out")
+            .accessibilityLabel("Zoom out")
+            .accessibilityIdentifier("toolbar.zoomOut")
+
+            Menu {
+                Toggle(isOn: $workspace.regionZoomArmed) {
+                    Label("Zoom Region", systemImage: "rectangle.dashed")
+                }
+                Button {
+                    workspace.undoManager.undo()
+                    workspace.scheduleRebuild()
+                } label: {
+                    Label("Undo", systemImage: "arrow.uturn.backward")
+                }
+                .disabled(!workspace.undoManager.canUndo)
+                Button {
+                    workspace.undoManager.redo()
+                    workspace.scheduleRebuild()
+                } label: {
+                    Label("Redo", systemImage: "arrow.uturn.forward")
+                }
+                .disabled(!workspace.undoManager.canRedo)
+                Toggle(isOn: nightModeBinding) {
+                    Label("Night Mode", systemImage: "moon.fill")
+                }
+                Button {
+                    withAnimation(.easeOut(duration: 0.15)) {
+                        workspace.inspectorVisible.toggle()
+                    }
+                } label: {
+                    Label("Inspector", systemImage: "sidebar.trailing")
+                }
+                Button {
+                    showAbout = true
+                } label: {
+                    Label("About XSky", systemImage: "info.circle")
+                }
+            } label: {
+                Image(systemName: "ellipsis.circle")
+            }
+            .accessibilityLabel("More")
+            .accessibilityIdentifier("toolbar.more")
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+        .background(Color(white: 0.07))
+    }
+
+    private func regularToolbar(style: ChartStyle) -> some View {
         @Bindable var workspace = workspace
         return HStack(spacing: 14) {
             Button {
