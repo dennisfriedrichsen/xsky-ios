@@ -82,6 +82,9 @@ final class WorkspaceModel {
             let store = try await repo.loadAll()
             self.store = store
             loadState = .ready
+            if labels.isEmpty {
+                labels = Self.defaultConstellationLabels(store: store)
+            }
             scheduleRebuild()
         } catch {
             loadState = .failed(String(describing: error))
@@ -299,7 +302,15 @@ final class WorkspaceModel {
 
     func generateConstellationLabels() {
         guard let store else { return }
-        var new = labels
+        performLabelChange(
+            Self.defaultConstellationLabels(store: store, startingFrom: labels),
+            undoLabel: "Constellation Labels")
+    }
+
+    private static func defaultConstellationLabels(
+        store: CatalogStore, startingFrom existing: [ChartLabel] = []
+    ) -> [ChartLabel] {
+        var new = existing
         for (i, entry) in ConstellationTable.entries.enumerated()
         where i < store.constellationCenters.count {
             guard !new.contains(where: { $0.anchor == .constellation(i) })
@@ -309,7 +320,7 @@ final class WorkspaceModel {
                     anchor: .constellation(i), text: entry.name,
                     offsetX: 0, offsetY: 0))
         }
-        performLabelChange(new, undoLabel: "Constellation Labels")
+        return new
     }
 
     func clearLabels() {
