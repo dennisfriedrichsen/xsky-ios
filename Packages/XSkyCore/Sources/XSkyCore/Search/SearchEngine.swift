@@ -26,6 +26,13 @@ public struct SearchResult: Hashable, Sendable {
     public let decRadians: Double
     public let rank: Rank
     public let catalogID: CatalogID?
+    /// True when `title` is a real proper/common name rather than a
+    /// generated designation fallback (e.g. "Betelgeuse" vs. the
+    /// generated "beta Apodis" for a star with no common name). Sorts
+    /// ahead of generated-designation titles within the same rank tier
+    /// so well-known named stars aren't crowded out by the many
+    /// similarly-prefixed generated designations.
+    public let isPrimaryName: Bool
 }
 
 /// Search over every loaded catalog, ported from the legacy find_*
@@ -80,7 +87,7 @@ public struct SearchEngine: Sendable {
             let ranked = SearchResult(
                 target: r.target, title: r.title, subtitle: r.subtitle,
                 raRadians: r.raRadians, decRadians: r.decRadians, rank: rank,
-                catalogID: r.catalogID)
+                catalogID: r.catalogID, isPrimaryName: r.isPrimaryName)
             if seen.insert(ranked).inserted { results.append(ranked) }
         }
 
@@ -110,6 +117,7 @@ public struct SearchEngine: Sendable {
 
         results.sort {
             if $0.rank != $1.rank { return $0.rank < $1.rank }
+            if $0.isPrimaryName != $1.isPrimaryName { return $0.isPrimaryName }
             return $0.title.localizedStandardCompare($1.title)
                 == .orderedAscending
         }
@@ -245,7 +253,8 @@ public struct SearchEngine: Sendable {
             raRadians: object.raRadians,
             decRadians: object.decRadians,
             rank: .exactDesignation,
-            catalogID: catalog.id)
+            catalogID: catalog.id,
+            isPrimaryName: true)
     }
 
     // MARK: suggestion corpus
@@ -274,7 +283,8 @@ public struct SearchEngine: Sendable {
                 raRadians: centers[i].raRadians,
                 decRadians: centers[i].decRadians,
                 rank: .exactName,
-                catalogID: nil)
+                catalogID: nil,
+                isPrimaryName: true)
             add(entry.name, r)
             add(entry.abbreviation, r)
             add(entry.genitive, r)
@@ -284,6 +294,12 @@ public struct SearchEngine: Sendable {
 
         for catalog in catalogs.values {
             for object in catalog.objects {
+                let hasCommonName: Bool = {
+                    if case .ybs(let hr, _, _, _, _) = object.identity {
+                        return starNames?.names(forHR: hr).isEmpty == false
+                    }
+                    return true
+                }()
                 let base = SearchResult(
                     target: .object(object.id),
                     title: ObjectLabels.preferredName(
@@ -292,7 +308,8 @@ public struct SearchEngine: Sendable {
                     raRadians: object.raRadians,
                     decRadians: object.decRadians,
                     rank: .exactName,
-                    catalogID: catalog.id)
+                    catalogID: catalog.id,
+                    isPrimaryName: hasCommonName)
 
                 switch object.identity {
                 case .ybs(let hr, let bayer, _, let flamsteed, let con):
@@ -346,7 +363,8 @@ public struct SearchEngine: Sendable {
                         raRadians: object.raRadians,
                         decRadians: object.decRadians,
                         rank: .exactName,
-                        catalogID: catalog.id)
+                        catalogID: catalog.id,
+                        isPrimaryName: true)
                     add(entry.name, r)
                 }
             }
