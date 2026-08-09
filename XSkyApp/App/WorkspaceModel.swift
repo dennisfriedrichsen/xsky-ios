@@ -25,6 +25,12 @@ final class WorkspaceModel {
     var labels: [ChartLabel] = [] {
         didSet { scheduleRebuild(); schedulePersist() }
     }
+    var hasConstellationLabels: Bool {
+        labels.contains {
+            if case .constellation = $0.anchor { return true }
+            return false
+        }
+    }
     var selection: CatalogObjectID? {
         didSet {
             selectedDetails = selection.flatMap { id in
@@ -82,9 +88,6 @@ final class WorkspaceModel {
             let store = try await repo.loadAll()
             self.store = store
             loadState = .ready
-            if labels.isEmpty {
-                labels = Self.defaultConstellationLabels(store: store)
-            }
             scheduleRebuild()
         } catch {
             loadState = .failed(String(describing: error))
@@ -302,15 +305,7 @@ final class WorkspaceModel {
 
     func generateConstellationLabels() {
         guard let store else { return }
-        performLabelChange(
-            Self.defaultConstellationLabels(store: store, startingFrom: labels),
-            undoLabel: "Constellation Labels")
-    }
-
-    private static func defaultConstellationLabels(
-        store: CatalogStore, startingFrom existing: [ChartLabel] = []
-    ) -> [ChartLabel] {
-        var new = existing
+        var new = labels
         for (i, entry) in ConstellationTable.entries.enumerated()
         where i < store.constellationCenters.count {
             guard !new.contains(where: { $0.anchor == .constellation(i) })
@@ -320,7 +315,7 @@ final class WorkspaceModel {
                     anchor: .constellation(i), text: entry.name,
                     offsetX: 0, offsetY: 0))
         }
-        return new
+        performLabelChange(new, undoLabel: "Constellation Labels")
     }
 
     func clearLabels() {

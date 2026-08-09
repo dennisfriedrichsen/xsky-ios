@@ -103,6 +103,7 @@ struct SidebarView: View {
             settingToggle(
                 "Constellation Labels", \.showConstellationLabels,
                 id: "constellationLabels")
+                .disabled(!workspace.hasConstellationLabels)
         }
     }
 
