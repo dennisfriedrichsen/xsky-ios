@@ -45,6 +45,14 @@ struct SearchEngineTests {
         }
     }
 
+    @Test func commonNamePrefixNotCrowdedOutByBayerMatches() {
+        // "Bet" is also a prefix of every "Beta <constellation>" bayer
+        // designation, which used to fill the suggestion quota and push
+        // Betelgeuse itself out of the results.
+        let results = store.searchEngine.suggestions(for: "Bet")
+        #expect(results.contains { $0.title == "Betelgeuse" })
+    }
+
     @Test func flamsteedDesignation() {
         let object = expectObject("61 Cygni", catalog: .ybs)
         if case .ybs(let hr, _, _, _, _)? = object?.identity {
