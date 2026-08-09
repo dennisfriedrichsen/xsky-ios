@@ -6,6 +6,8 @@ import UIKit
 struct AboutView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var usingOriginalIcon = UIApplication.shared.alternateIconName == "AppIcon-Original"
+    @State private var isSyncingIconToggle = false
+    @State private var iconChangeErrorMessage: String?
 
     private var version: String {
         let info = Bundle.main.infoDictionary
@@ -103,8 +105,8 @@ struct AboutView: View {
                             Toggle("Use original xsky icon", isOn: $usingOriginalIcon)
                                 .accessibilityIdentifier("about.originalIconToggle")
                                 .onChange(of: usingOriginalIcon) { _, useOriginal in
-                                    UIApplication.shared.setAlternateIconName(
-                                        useOriginal ? "AppIcon-Original" : nil)
+                                    guard !isSyncingIconToggle else { return }
+                                    setAlternateIcon(useOriginal: useOriginal)
                                 }
                         }
                     }
@@ -142,6 +144,42 @@ struct AboutView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .accessibilityIdentifier("about")
+        .alert(
+            "Couldn't Change App Icon",
+            isPresented: Binding(
+                get: { iconChangeErrorMessage != nil },
+                set: { isPresented in
+                    if !isPresented { iconChangeErrorMessage = nil }
+                }),
+            presenting: iconChangeErrorMessage
+        ) { _ in
+            Button("OK", role: .cancel) {}
+        } message: { message in
+            Text(message)
+        }
+    }
+
+    /// Requests the alternate-icon change from iOS and reconciles the toggle
+    /// with the actual result once the (async) completion handler fires.
+    /// Failures restore the toggle to match the real system state rather
+    /// than leaving it out of sync with `UIApplication.shared.alternateIconName`.
+    private func setAlternateIcon(useOriginal: Bool) {
+        UIApplication.shared.setAlternateIconName(useOriginal ? "AppIcon-Original" : nil) { error in
+            DispatchQueue.main.async {
+                guard let error else { return }
+                iconChangeErrorMessage = error.localizedDescription
+                syncToggle(to: UIApplication.shared.alternateIconName == "AppIcon-Original")
+            }
+        }
+    }
+
+    /// Sets `usingOriginalIcon` without re-triggering `onChange`, so
+    /// programmatic corrections after a failed change don't loop back into
+    /// another icon-change request.
+    private func syncToggle(to useOriginal: Bool) {
+        isSyncingIconToggle = true
+        usingOriginalIcon = useOriginal
+        isSyncingIconToggle = false
     }
 
     private func section(_ title: String, _ text: String) -> some View {
