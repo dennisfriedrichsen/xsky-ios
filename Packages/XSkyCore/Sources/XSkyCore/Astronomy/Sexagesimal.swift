@@ -64,7 +64,7 @@ public struct SexagesimalRA: Hashable, Codable, Sendable {
     /// `05h 36m 12s.700`.
     public var displayString: String {
         String(
-            format: "%02dh %02dm %02ds.%03d", hours, minutes, seconds,
+            format: "%02dh\u{00A0}%02dm\u{00A0}%02ds.%03d", hours, minutes, seconds,
             thousandths)
     }
 }
@@ -140,7 +140,7 @@ public struct SexagesimalDec: Hashable, Codable, Sendable {
     /// `-01d 12' 07".00`.
     public var displayString: String {
         String(
-            format: "%@%02dd %02d' %02d\".%02d", sign < 0 ? "-" : "+",
+            format: "%@%02dd\u{00A0}%02d'\u{00A0}%02d\".%02d", sign < 0 ? "-" : "+",
             degrees, minutes, seconds, hundredths)
     }
 }
