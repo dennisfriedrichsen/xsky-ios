@@ -48,7 +48,7 @@ final class WorkspaceModel {
     }
 
     // MARK: UI state
-    var sidebarVisible = true { didSet { schedulePersist() } }
+    var sidebarVisible = false { didSet { schedulePersist() } }
     var inspectorVisible = false { didSet { schedulePersist() } }
     var regionZoomArmed = false
     var hoverReadout: String?
@@ -65,14 +65,15 @@ final class WorkspaceModel {
     private var persistTask: Task<Void, Never>?
     private let log = Logger(subsystem: "com.dennisfriedrichsen.xsky", category: "workspace")
 
-    init() {}
+    init() {
+        restorePersistedState()
+    }
 
     // MARK: startup
 
     func start() async {
         guard repository == nil else { return }
         undoManager.levelsOfUndo = 100
-        restorePersistedState()
 
         let repo = CatalogRepository(
             locator: BundleResourceLocator(),
