@@ -1,7 +1,7 @@
-XSky for iPad — Third-Party Notices and Attributions
+XSky — Third-Party Notices and Attributions
 =====================================================
 
-XSky for iPad is a native port of the XSky X Window System application.
+XSky is a native port of the XSky X Window System application.
 This document collects, in one place, the original author's copyright
 notice, warranty disclaimer, and acknowledgements (reproduced verbatim
 below), together with attribution for the bundled astronomical catalogs
@@ -9,7 +9,7 @@ and the pointer cursor glyph. It supersedes the separate Copyright.txt,
 Warranty.txt, and ACKNOWLEDGEMENTS files for in-app display; those files
 remain bundled unmodified alongside this one.
 
-XSky for iPad is offered at no cost in the App Store.
+XSky is offered at no cost in the App Store.
 
 
 ORIGINAL COPYRIGHT AND LICENSE

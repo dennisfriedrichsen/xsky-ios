@@ -20,7 +20,7 @@ struct AboutView: View {
                 VStack(alignment: .leading, spacing: 18) {
                     HStack(alignment: .top, spacing: 16) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("XSky for iPad")
+                            Text("XSky")
                                 .font(.largeTitle.weight(.semibold))
                             Text(version)
                                 .font(.callout.monospacedDigit())
