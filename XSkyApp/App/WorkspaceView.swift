@@ -391,6 +391,11 @@ struct WorkspaceView: View {
                     .font(.caption.monospacedDigit())
                     .accessibilityLabel("Pointer position")
             }
+            if isCompact {
+                Text(workspace.centerReadout)
+                    .font(.caption.monospacedDigit())
+                    .accessibilityIdentifier("chart.centerReadout")
+            }
             Text(workspace.fieldReadout)
                 .font(.caption.monospacedDigit())
             Text("Equinox J2000")
