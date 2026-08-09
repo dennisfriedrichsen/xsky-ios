@@ -19,6 +19,21 @@ struct XSkyAppTests {
         #expect(abs(workspace.viewport.degreesPerPoint - 0.05) < 1e-12)
     }
 
+    @Test func constellationLabelsAreOffUntilGenerated() {
+        let workspace = WorkspaceModel()
+        #expect(!workspace.settings.showConstellationLabels)
+        #expect(!workspace.hasConstellationLabels)
+
+        workspace.labels = [
+            ChartLabel(anchor: .sky(raRadians: 0, decRadians: 0), text: "Note")
+        ]
+        #expect(!workspace.hasConstellationLabels)
+
+        workspace.labels.append(
+            ChartLabel(anchor: .constellation(0), text: "Andromeda"))
+        #expect(workspace.hasConstellationLabels)
+    }
+
     @Test func legacyCatalogResourcesAreBundled() {
         for name in ["ybs.dat", "rngc.dat", "qso.dat", "boundaries.dat"] {
             let parts = name.split(separator: ".")

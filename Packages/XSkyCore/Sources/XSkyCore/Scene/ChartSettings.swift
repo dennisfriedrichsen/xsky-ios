@@ -43,7 +43,7 @@ public struct ChartSettings: Hashable, Codable, Sendable {
         showOutlines: Bool = false,
         showObjectLabels: Bool = true,
         showStarLabels: Bool = true,
-        showConstellationLabels: Bool = true,
+        showConstellationLabels: Bool = false,
         stellarLimitingMagnitude: Double = 8.0,
         nonstellarLimitingMagnitude: Double = 12.0,
         maximumSizeMagnitude: Double = -1.46,

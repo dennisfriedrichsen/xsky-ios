@@ -25,6 +25,12 @@ final class WorkspaceModel {
     var labels: [ChartLabel] = [] {
         didSet { scheduleRebuild(); schedulePersist() }
     }
+    var hasConstellationLabels: Bool {
+        labels.contains {
+            if case .constellation = $0.anchor { return true }
+            return false
+        }
+    }
     var selection: CatalogObjectID? {
         didSet {
             selectedDetails = selection.flatMap { id in
