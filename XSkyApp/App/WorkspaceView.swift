@@ -142,7 +142,7 @@ struct WorkspaceView: View {
                     workspace.sidebarVisible.toggle()
                 }
             } label: {
-                Image(systemName: "sidebar.leading")
+                Image(systemName: "line.3.horizontal")
             }
             .help("Toggle sidebar")
             .accessibilityLabel("Toggle sidebar")
