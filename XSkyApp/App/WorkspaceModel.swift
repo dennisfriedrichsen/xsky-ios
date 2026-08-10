@@ -31,6 +31,12 @@ final class WorkspaceModel {
             return false
         }
     }
+    var hasObjectLabels: Bool {
+        labels.contains {
+            if case .object = $0.anchor { return true }
+            return false
+        }
+    }
     var selection: CatalogObjectID? {
         didSet {
             selectedDetails = selection.flatMap { id in
