@@ -184,6 +184,7 @@ struct SidebarView: View {
             Button("Generate Constellation Labels") {
                 workspace.generateConstellationLabels()
             }
+            .disabled(workspace.hasConstellationLabels)
             .accessibilityIdentifier("sidebar.generateConstellationLabels")
             Button("Clear All Labels", role: .destructive) {
                 // immediate undo is available from the toolbar
