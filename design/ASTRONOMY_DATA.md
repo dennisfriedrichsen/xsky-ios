@@ -148,6 +148,13 @@ Keep “unknown magnitude” as `nil`, not the legacy sentinel `99.99`.
 - Search HR/YBS number, Bayer designation, Flamsteed designation, and common
   names from `starnames.dat`.
 
+YBS remains the star catalog. Hipparcos was evaluated as a replacement and
+rejected in that role — it carries no Bayer or Flamsteed designations, and
+16% of its entries have no HD cross-identification to bridge back to YBS.
+See [ADR 0001](adr/0001-hipparcos-star-catalog.md). Hipparcos may later be
+added as a separate optional faint-star and parallax layer joined to YBS by
+HD number, which leaves everything in this section unchanged.
+
 ## RNGC behavior
 
 - Parse fixed-width fields from `rngc.h` and precess 1975.0 positions to J2000.
