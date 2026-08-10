@@ -1,4 +1,4 @@
-# XSky for iPad
+# XSky
 
 A native SwiftUI port of [XSky](../xsky), Terry R. Friedrichsen's
 interactive X Window System sky atlas (copyright 1992–6). XSky is a static
