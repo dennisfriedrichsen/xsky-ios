@@ -233,18 +233,6 @@ struct WorkspaceView: View {
 
             Spacer()
 
-            Text(workspace.centerReadout)
-                .font(.callout.monospacedDigit())
-                .foregroundStyle(.secondary)
-                .accessibilityIdentifier("chart.centerReadout")
-
-            Text(workspace.fieldReadout)
-                .font(.callout.monospacedDigit())
-                .foregroundStyle(.tertiary)
-                .accessibilityIdentifier("chart.fieldReadout")
-
-            Spacer()
-
             Button {
                 workspace.zoomStep(in: true)
             } label: {
@@ -380,6 +368,10 @@ struct WorkspaceView: View {
     private var hud: some View {
         HStack(spacing: 20) {
             HStack(spacing: 20) {
+                Text(workspace.fieldReadout)
+                    .font(.caption.monospacedDigit())
+                    .accessibilityIdentifier("chart.fieldReadout")
+
                 if workspace.regionZoomArmed {
                     Label(
                         "Drag to select a region · Esc cancels",
@@ -391,16 +383,12 @@ struct WorkspaceView: View {
                         .font(.caption.monospacedDigit())
                         .accessibilityLabel("Pointer position")
                 }
-                if isCompact {
-                    Text(workspace.centerReadout)
-                        .font(.caption.monospacedDigit())
-                        .accessibilityIdentifier("chart.centerReadout")
-                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
-            Text(workspace.fieldReadout)
+            Text(workspace.centerReadout)
                 .font(.caption.monospacedDigit())
+                .accessibilityIdentifier("chart.centerReadout")
                 .frame(maxWidth: .infinity, alignment: .center)
 
             Text("Equinox J2000")
