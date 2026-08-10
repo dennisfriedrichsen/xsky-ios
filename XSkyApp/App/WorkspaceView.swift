@@ -379,28 +379,34 @@ struct WorkspaceView: View {
 
     private var hud: some View {
         HStack(spacing: 20) {
-            if workspace.regionZoomArmed {
-                Label(
-                    "Drag to select a region · Esc cancels",
-                    systemImage: "rectangle.dashed")
-                .font(.caption)
+            HStack(spacing: 20) {
+                if workspace.regionZoomArmed {
+                    Label(
+                        "Drag to select a region · Esc cancels",
+                        systemImage: "rectangle.dashed")
+                    .font(.caption)
+                }
+                if let hover = workspace.hoverReadout {
+                    Text(hover)
+                        .font(.caption.monospacedDigit())
+                        .accessibilityLabel("Pointer position")
+                }
+                if isCompact {
+                    Text(workspace.centerReadout)
+                        .font(.caption.monospacedDigit())
+                        .accessibilityIdentifier("chart.centerReadout")
+                }
             }
-            Spacer()
-            if let hover = workspace.hoverReadout {
-                Text(hover)
-                    .font(.caption.monospacedDigit())
-                    .accessibilityLabel("Pointer position")
-            }
-            if isCompact {
-                Text(workspace.centerReadout)
-                    .font(.caption.monospacedDigit())
-                    .accessibilityIdentifier("chart.centerReadout")
-            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
             Text(workspace.fieldReadout)
                 .font(.caption.monospacedDigit())
+                .frame(maxWidth: .infinity, alignment: .center)
+
             Text("Equinox J2000")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
+                .frame(maxWidth: .infinity, alignment: .trailing)
         }
         .foregroundStyle(.secondary)
         .padding(.horizontal, 14)
