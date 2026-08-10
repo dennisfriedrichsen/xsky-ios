@@ -99,6 +99,7 @@ struct SidebarView: View {
             settingToggle(
                 "Constellation Outlines", \.showOutlines, id: "outlines")
             settingToggle("Object Labels", \.showObjectLabels, id: "objectLabels")
+                .disabled(!workspace.hasObjectLabels)
             settingToggle("Star Labels", \.showStarLabels, id: "starLabels")
             settingToggle(
                 "Constellation Labels", \.showConstellationLabels,
