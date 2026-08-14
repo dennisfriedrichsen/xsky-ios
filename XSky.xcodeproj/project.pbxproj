@@ -44,6 +44,11 @@
 			path = Resources/LegacyCatalogs;
 			sourceTree = "<group>";
 		};
+		A1000034000000000NOTGRPX /* Resources/Notices */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Resources/Notices;
+			sourceTree = "<group>";
+		};
 		A1000032000000000TSTGRPX /* XSkyAppTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = XSkyAppTests;
@@ -87,6 +92,7 @@
 			children = (
 				A1000030000000000APPGRPX /* XSkyApp */,
 				A1000031000000000RESGRPX /* Resources/LegacyCatalogs */,
+				A1000034000000000NOTGRPX /* Resources/Notices */,
 				A1000032000000000TSTGRPX /* XSkyAppTests */,
 				A1000033000000000UITGRPX /* XSkyAppUITests */,
 				A1000051000000000PRODGRP /* Products */,
@@ -121,6 +127,7 @@
 			fileSystemSynchronizedGroups = (
 				A1000030000000000APPGRPX /* XSkyApp */,
 				A1000031000000000RESGRPX /* Resources/LegacyCatalogs */,
+				A1000034000000000NOTGRPX /* Resources/Notices */,
 			);
 			name = XSky;
 			packageProductDependencies = (

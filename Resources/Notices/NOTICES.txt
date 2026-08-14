@@ -7,7 +7,7 @@ notice, warranty disclaimer, and acknowledgements (reproduced verbatim
 below), together with attribution for the bundled astronomical catalogs
 and the pointer cursor glyph. It supersedes the separate Copyright.txt,
 Warranty.txt, and ACKNOWLEDGEMENTS files for in-app display; those files
-remain bundled unmodified alongside this one.
+remain bundled unmodified in this same directory.
 
 XSky is offered at no cost in the App Store.
 

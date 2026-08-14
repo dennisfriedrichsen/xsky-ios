@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// Full-text third-party notices, licenses, and catalog attributions,
-/// consolidated from Resources/LegacyCatalogs/NOTICES.txt.
+/// consolidated from Resources/Notices/NOTICES.txt.
 struct LicensesView: View {
     private var noticesText: String {
         guard let url = Bundle.main.url(forResource: "NOTICES", withExtension: "txt"),
