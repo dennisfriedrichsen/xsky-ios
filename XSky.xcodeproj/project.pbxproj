@@ -44,11 +44,6 @@
 			path = Resources/LegacyCatalogs;
 			sourceTree = "<group>";
 		};
-		A1000034000000000NOTGRPX /* Resources/Notices */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Resources/Notices;
-			sourceTree = "<group>";
-		};
 		A1000032000000000TSTGRPX /* XSkyAppTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = XSkyAppTests;
@@ -57,6 +52,11 @@
 		A1000033000000000UITGRPX /* XSkyAppUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = XSkyAppUITests;
+			sourceTree = "<group>";
+		};
+		A1000034000000000NOTGRPX /* Resources/Notices */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Resources/Notices;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -189,7 +189,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2600;
-				LastUpgradeCheck = 2660;
+				LastUpgradeCheck = 2720;
 				TargetAttributes = {
 					A1000011000000000TESTTGT = {
 						TestTargetID = A1000010000000000000APPT;
@@ -275,6 +275,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
@@ -331,6 +332,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
