@@ -136,12 +136,17 @@ public enum ChartInteraction {
     /// a point fixed at gesture start, so a drag that hits a pole can stop
     /// there without the original grab point dragging the chart around.
     ///
-    /// Once the center sits on a pole it cannot go further: a north-up
-    /// chart there can only turn about the pole. Horizontal motion turns
-    /// it, as if grabbing the sky beside the pole; vertical motion either
-    /// pulls the pole away from the center or is ignored. A step that
-    /// would swing the chart around a pole the center only just misses
-    /// lands on the pole instead.
+    /// A pole is kept out of the middle of the screen: a drag that would
+    /// bring it nearer than `minimumPoleOffsetFraction` of the screen
+    /// height to the center stops vertically there, while horizontal
+    /// motion still pans.
+    ///
+    /// A center put on a pole some other way (centering on an object)
+    /// cannot go further: a north-up chart there can only turn about the
+    /// pole. Horizontal motion turns it, as if grabbing the sky beside
+    /// the pole; vertical motion either pulls the pole away from the
+    /// center or is ignored. A step that would swing the chart around a
+    /// pole the center only just misses turns about the pole instead.
     public static func panned(
         _ viewport: ChartViewport, from start: Point2D, to end: Point2D
     ) -> ChartViewport {
@@ -173,13 +178,52 @@ public enum ChartInteraction {
         guard
             isOnPole(vp.center)
                 || turn(from: viewport, to: vp) > maxPanStepTurn
-        else { return vp }
+        else { return keepingPoleOutOfMiddle(vp, from: viewport) }
         vp.center = EquatorialCoordinate(
             rightAscension: viewport.center.rightAscension,
             declination: Radians(
                 vp.center.declination.value > 0 ? .pi / 2 : -.pi / 2),
             equinox: viewport.center.equinox)
-        return turnedAboutPole(vp, from: start, to: end)
+        return keepingPoleOutOfMiddle(
+            turnedAboutPole(vp, from: start, to: end), from: viewport)
+    }
+
+    /// How near the screen center a pole may come, as a fraction of the
+    /// screen height: it stays in the top or bottom 30%.
+    static let minimumPoleOffsetFraction = 0.2
+
+    /// The largest center declination (radians, either sign) that keeps
+    /// both poles out of the middle of the screen. On a north-up chart a
+    /// pole always lies straight above or below the center.
+    static func maximumCenterDeclination(
+        in viewport: ChartViewport
+    ) -> Double {
+        let offsetDegrees =
+            viewport.sizeInPoints.height * minimumPoleOffsetFraction
+            * viewport.degreesPerPoint
+        return max(.pi / 2 - offsetDegrees / Angles.degreesPerRadian, 0)
+    }
+
+    /// Stop `proposed` short of bringing a pole into the middle of the
+    /// screen, keeping its RA so horizontal motion still applies. A
+    /// center already nearer the pole (say, centered on Polaris) may move
+    /// away from it but not closer.
+    static func keepingPoleOutOfMiddle(
+        _ proposed: ChartViewport, from previous: ChartViewport
+    ) -> ChartViewport {
+        let previousDec = abs(previous.center.declination.value)
+        var limit = maximumCenterDeclination(in: proposed)
+        if previousDec > maximumCenterDeclination(in: previous) {
+            limit = max(limit, previousDec)
+        }
+        let dec = proposed.center.declination.value
+        guard abs(dec) > limit else { return proposed }
+        var vp = proposed
+        vp.center = EquatorialCoordinate(
+            rightAscension: proposed.center.rightAscension,
+            declination: Radians(dec > 0 ? limit : -limit),
+            equinox: proposed.center.equinox)
+        return vp
     }
 
     private static func isOnPole(_ center: EquatorialCoordinate) -> Bool {
@@ -243,7 +287,7 @@ public enum ChartInteraction {
                 ChartViewport.minimumDegreesPerPoint),
             ChartViewport.maximumDegreesPerPoint)
         vp.center = centerKeeping(anchor: sky, under: anchor, in: vp)
-        return vp
+        return keepingPoleOutOfMiddle(vp, from: viewport)
     }
 
     /// Region zoom (legacy change_scale): center on the marquee center and
