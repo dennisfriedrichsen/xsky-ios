@@ -1,6 +1,6 @@
 # XSky
 
-A native SwiftUI port of [XSky](../xsky), Terry R. Friedrichsen's
+A native SwiftUI port of XSky, Terry R. Friedrichsen's
 interactive X Window System sky atlas (copyright 1992–6). XSky is a static
 J2000 equatorial star atlas — deliberately not a live-sky planetarium — for
 exploring the bundled Yale Bright Star, Revised NGC, and QSO catalogs and
@@ -68,9 +68,12 @@ limits, and the "nice interval" grid tables.
 
 Correctness is enforced by golden fixtures generated **from the legacy C
 itself** (`tools/golden/generate.sh` compiles the unmodified `position.c`
-and extracted Herget routines from the sibling `../xsky` checkout and
-writes `Packages/XSkyCore/Tests/XSkyCoreTests/Fixtures/golden.json`). The
-Swift implementation is never used to produce its own expected values.
+and extracted Herget routines from a sibling `../xsky` checkout of the
+original C source and writes
+`Packages/XSkyCore/Tests/XSkyCoreTests/Fixtures/golden.json`). That source
+is not public, so the committed fixtures are the reference for everyone
+else. The Swift implementation is never used to produce its own expected
+values.
 
 Catalog parity: 9,110 YBS records → 9,096 positioned stars (14 skipped for
 blank positions), 8,163 RNGC objects (1975.0 → J2000), 1,549 QSOs (B1950 →
@@ -106,9 +109,9 @@ Everything in `Resources/LegacyCatalogs` is a byte-for-byte copy from the
 legacy repository (provenance and SHA-256 hashes in
 `design/LEGACY_RESOURCES.md`). Original notices (`ACKNOWLEDGEMENTS`,
 `Copyright.txt`, `Warranty.txt`) ship in the app bundle and are surfaced
-in the About screen. **A human must review the redistribution terms before
-any App Store or commercial release**; the original license forbids sale
-and requires crediting the original author.
+in the About screen. The original license forbids sale and requires
+crediting the original author; the app is free, and `NOTICES.txt` records
+the licensing review.
 
 The pointer used when a mouse or trackpad is attached (`X11Trek` in
 `XSkyApp/Assets.xcassets`) is the X11 Trek Cursor, the original cursor
@@ -135,3 +138,9 @@ also surfaced in the About screen.
   toolbar, keyboard (⌘-), and pinch.
 - The legacy SAO/GCVS/UGC/WDS/double-star catalogs are out of scope; the
   architecture accepts new catalogs without touching the chart pipeline.
+
+## License and privacy
+
+Distributed under the original xsky terms: free to copy and redistribute
+with credit, but not for sale. See [LICENSE](LICENSE). The app collects no
+data; see [PRIVACY.md](PRIVACY.md).
