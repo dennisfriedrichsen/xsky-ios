@@ -2,7 +2,7 @@ import SwiftUI
 import UIKit
 
 /// About screen: version/build, original-author attribution, data
-/// provenance, and the licensing-review notice.
+/// provenance, and the licensing notice.
 struct AboutView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var usingOriginalIcon = UIApplication.shared.alternateIconName == "AppIcon-Original"
@@ -69,14 +69,16 @@ struct AboutView: View {
                         """
                         Bundled catalogs: the Yale Catalog of Bright Stars \
                         (4th ed.), the Revised New General Catalog of \
-                        Non-Stellar Objects, an optical catalog of \
-                        quasi-stellar objects, constellation boundaries and \
-                        outlines, and common-name tables, all as distributed \
-                        with the original XSky. Constellation identification \
-                        uses the boundary table of Dr. Nancy G. Roman (1987, \
-                        PASP, 99, 695) with Herget precession credited to \
-                        Dr. Wayne H. Warren, Jr. Speed-up contributions by \
-                        Brian Wing.
+                        Non-Stellar Objects, Hewitt & Burbidge's Revised \
+                        Optical Catalog of Quasi-Stellar Objects (1980), \
+                        constellation boundaries and outlines, and \
+                        common-name tables, all as distributed with the \
+                        original XSky. Constellation identification uses the \
+                        boundary table of Dr. Nancy G. Roman (1987, PASP, 99, \
+                        695) with Herget precession credited to Dr. Wayne H. \
+                        Warren, Jr. Objects are pre-screened for each chart \
+                        with a port of Brian Wing's viewport test, which he \
+                        originally wrote to speed up the legacy SAO catalog.
                         """)
 
                     section(
@@ -112,15 +114,14 @@ struct AboutView: View {
                     }
 
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("Licensing Review").font(.headline)
+                        Text("Licensing").font(.headline)
                         Text(
                             """
                             The original XSky license permits copying and \
                             redistribution but not sale, and requires crediting \
-                            the original author. This app is offered at no \
-                            cost in the App Store. The source and authorship \
-                            of the bundled quasi-stellar object catalog is \
-                            still being confirmed.
+                            the original author. This app is free, with no \
+                            in-app purchases or advertising, and credits Terry \
+                            R. Friedrichsen as the original author.
                             """)
                             .font(.callout)
                             .foregroundStyle(.secondary)

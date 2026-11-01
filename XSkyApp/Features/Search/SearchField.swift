@@ -21,6 +21,9 @@ struct SearchField: View {
             .focused(focused)
             .onSubmit {
                 if let first = workspace.searchResults.first {
+                    // drop focus so the keyboard does not return when
+                    // the inspector sheet is dismissed
+                    focused.wrappedValue = false
                     workspace.activate(result: first)
                 }
             }
@@ -58,6 +61,7 @@ struct SearchField: View {
 /// Grouped suggestion list shown over the chart while searching.
 struct SearchResultsList: View {
     @Environment(WorkspaceModel.self) private var workspace
+    var focused: FocusState<Bool>.Binding
 
     private var grouped: [(SearchResult.Rank, [SearchResult])] {
         let groups = Dictionary(
@@ -73,6 +77,7 @@ struct SearchResultsList: View {
                         Array(results.enumerated()), id: \.offset
                     ) { _, result in
                         Button {
+                            focused.wrappedValue = false
                             workspace.activate(result: result)
                         } label: {
                             HStack {

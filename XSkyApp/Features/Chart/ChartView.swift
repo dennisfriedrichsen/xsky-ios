@@ -146,11 +146,13 @@ struct ChartView: View {
                         in: workspace.viewport)
                 }
                 guard let anchor = dragAnchor else { return }
+                // solve from the previous frame so each step stays
+                // continuous (no 180-degree flip when crossing a pole)
                 var vp = workspace.gestureViewport ?? workspace.viewport
                 vp.center = ChartInteraction.centerKeeping(
                     anchor: anchor,
                     under: Point2D(x: value.location.x, y: value.location.y),
-                    in: workspace.viewport)
+                    in: vp)
                 workspace.gestureViewport = vp
                 workspace.rebuildForGesturePreview()
             }

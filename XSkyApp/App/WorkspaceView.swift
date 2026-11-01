@@ -350,7 +350,7 @@ struct WorkspaceView: View {
 
             if !workspace.searchResults.isEmpty {
                 VStack {
-                    SearchResultsList()
+                    SearchResultsList(focused: $searchFocused)
                         .frame(maxWidth: 430, maxHeight: 320)
                         .padding(.top, 4)
                     Spacer()

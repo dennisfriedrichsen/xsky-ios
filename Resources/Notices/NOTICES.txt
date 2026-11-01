@@ -81,19 +81,30 @@ BUNDLED CATALOG DATA
   National Space Science Data Center (NSSDC).
 - Revised New General Catalogue of Non-Stellar Objects — originally
   distributed via the NSSDC.
-- An optical catalog of quasi-stellar objects, as distributed with the
-  original xsky. (Primary source not identified in the original xsky
-  distribution; pending identification as part of the licensing review.)
+- A Revised Optical Catalog of Quasi-Stellar Objects: Hewitt, A., &
+  Burbidge, G. 1980, Astrophysical Journal Supplement Series, 43, 57
+  (erratum 1981, ApJS, 46, 113), as distributed by the NSSDC. The
+  original xsky catalog documentation names this catalog, and the
+  bundled qso.dat is its abridgement.
 - Constellation boundaries: Roman, N. G. 1987, Publications of the
   Astronomical Society of the Pacific, 99, 695, as corrected for the
   NASA Astronomical Data Center by Bill Owen (JPL).
 - Herget precession algorithm and constants, credited to Dr. Wayne H.
   Warren, Jr., based on a BASIC implementation (PRECESS.BAS) provided by
   PC Leyland.
-- SAO catalog display speed-up technique contributed by Brian Wing.
+- Viewport pre-screening by Brian Wing. His routine was written to
+  speed up display of the SAO catalog, which this app does not bundle.
+  The app still uses a port of the routine to cull objects from every
+  bundled catalog before each chart is drawn.
 
 All catalog data above is bundled as abridged for, and distributed with,
-the original xsky application.
+the original xsky application. These catalogs are compilations of
+published scientific measurements, originally distributed by NASA's
+National Space Science Data Center. They are reproduced here, with
+attribution, in an app offered free of charge, and are not used for
+any commercial purpose. Current editions of these catalogs are
+available from the CDS VizieR service, Strasbourg, France
+(DOI: 10.26093/cds/vizier).
 
 
 POINTER CURSOR
@@ -101,15 +112,16 @@ POINTER CURSOR
 The pointer glyph shown on devices with an attached mouse or trackpad is
 the X11 "Trek" cursor (XC_trek, glyph 142) from the X Window System
 `cursor` font, as distributed in X.Org's font-cursor-misc package. The
-package's original copyright notice describes these cursor glyphs as
-"unencumbered."
+package's license (its COPYING file) reads in full:
+
+    These "glyphs" are unencumbered
 
 
 LICENSING STATUS
 ------------------
-The original xsky license (above) permits copying and redistribution but
-not sale, and requires crediting the original author; the source and
-authorship of the bundled quasi-stellar object catalog is unconfirmed.
-Both points are under active human review before this app's continued
-distribution. See the "Licensing Review" section of the About screen for
-current status.
+The original xsky license (above) permits copying and redistribution
+as long as no money is made from the sale or redistribution of the
+program, and requires crediting the original author. This app is
+distributed free of charge, with no in-app purchases, subscriptions,
+or advertising, and credits Terry R. Friedrichsen as the original
+author. The sources of all bundled catalog data are identified above.
