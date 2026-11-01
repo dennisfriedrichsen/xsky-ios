@@ -21,10 +21,8 @@ struct SearchField: View {
             .focused(focused)
             .onSubmit {
                 if let first = workspace.searchResults.first {
-                    // drop focus so the keyboard does not return when
-                    // the inspector sheet is dismissed
-                    focused.wrappedValue = false
-                    workspace.activate(result: first)
+                    endEditingAndActivate(
+                        first, focused: focused, workspace: workspace)
                 }
             }
             .onChange(of: workspace.searchText) {
@@ -58,6 +56,20 @@ struct SearchField: View {
     }
 }
 
+/// Drops search focus so the keyboard does not return when the inspector
+/// sheet is dismissed, then activates the result on the next main-actor
+/// turn. Ending editing in the same update that activation clears the
+/// field's text can strand UIKit's blinking text cursor on the field,
+/// and that endless animation keeps the app from ever going idle.
+@MainActor
+private func endEditingAndActivate(
+    _ result: SearchResult, focused: FocusState<Bool>.Binding,
+    workspace: WorkspaceModel
+) {
+    focused.wrappedValue = false
+    Task { workspace.activate(result: result) }
+}
+
 /// Grouped suggestion list shown over the chart while searching.
 struct SearchResultsList: View {
     @Environment(WorkspaceModel.self) private var workspace
@@ -77,8 +89,8 @@ struct SearchResultsList: View {
                         Array(results.enumerated()), id: \.offset
                     ) { _, result in
                         Button {
-                            focused.wrappedValue = false
-                            workspace.activate(result: result)
+                            endEditingAndActivate(
+                                result, focused: focused, workspace: workspace)
                         } label: {
                             HStack {
                                 Text(result.title)
