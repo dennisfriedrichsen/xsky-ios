@@ -159,6 +159,84 @@ struct SceneBuilderTests {
         }
     }
 
+    /// Near the pole a grab point can be kept under the finger by two
+    /// centers, one on each side of the pole. A zero-length drag must
+    /// keep the current one rather than jumping across.
+    @Test func zeroPanNearPoleKeepsCenter() {
+        let vp = viewport(raHours: 2.53, decDegrees: 89.26, scale: 0.04)
+        // a grab point past the pole (on the 14h side)
+        let start = Point2D(x: 512, y: 100)
+        let anchor = ChartProjection.unproject(start, in: vp)
+        let center = ChartInteraction.centerKeeping(
+            anchor: anchor, under: start, in: vp)
+        let separation = ChartProjection.angularSeparation(
+            center, vp.center
+        ).degrees
+        #expect(separation < 1e-6, "jumped to \(center)")
+    }
+
+    /// Dragging across the pole clamps there instead of redrawing the
+    /// chart rotated 180 degrees: frame to frame, the pole's screen
+    /// position never jumps and the chart never turns by more than a few
+    /// degrees.
+    @Test func panAcrossPoleNeverFlips() {
+        let pole = EquatorialCoordinate(
+            rightAscension: Radians(0), declination: Radians(.pi / 2))
+        let cases: [(ChartViewport, Point2D, Point2D)] = [
+            // grab beyond the pole, drag down
+            (
+                viewport(raHours: 2.53, decDegrees: 89.26, scale: 0.04),
+                Point2D(x: 512, y: 100), Point2D(x: 0, y: 600)
+            ),
+            // centered on the pole, drag down
+            (
+                viewport(raHours: 14.49, decDegrees: 90, scale: 0.04),
+                Point2D(x: 512, y: 100), Point2D(x: 0, y: 300)
+            ),
+            // grab below center, drag straight through the pole
+            (
+                viewport(raHours: 2.5, decDegrees: 80, scale: 0.04),
+                Point2D(x: 512, y: 384), Point2D(x: 0, y: 600)
+            ),
+            // the same near the south pole, upside down
+            (
+                viewport(
+                    raHours: 9, decDegrees: -89, scale: 0.04,
+                    orientation: .downunder),
+                Point2D(x: 512, y: 600), Point2D(x: 40, y: -500)
+            ),
+        ]
+        for (start, grab, drag) in cases {
+            var vp = start
+            let anchor = ChartProjection.unproject(grab, in: vp)
+            let southern = start.center.declination.value < 0
+            let trackedPole = southern
+                ? EquatorialCoordinate(
+                    rightAscension: Radians(0),
+                    declination: Radians(-.pi / 2))
+                : pole
+            var previousPole = ChartProjection.project(trackedPole, in: vp)
+            for step in 1...60 {
+                let f = Double(step) / 60
+                let target = Point2D(
+                    x: grab.x + drag.x * f, y: grab.y + drag.y * f)
+                vp.center = ChartInteraction.centerKeeping(
+                    anchor: anchor, under: target, in: vp)
+                let p = ChartProjection.project(trackedPole, in: vp)
+                let jump = (
+                    (p.x - previousPole.x) * (p.x - previousPole.x)
+                        + (p.y - previousPole.y) * (p.y - previousPole.y)
+                ).squareRoot()
+                // the pole may move with the finger (one step is at most
+                // ~10 points) but never leaps across the screen
+                #expect(
+                    jump < 25,
+                    "start \(start.center), step \(step): pole jumped \(jump)")
+                previousPole = p
+            }
+        }
+    }
+
     /// Pinch stays anchored to its centroid within one logical point.
     @Test func zoomIsAnchoredAtCentroid() {
         let vp = viewport(raHours: 5.6, decDegrees: 30)
