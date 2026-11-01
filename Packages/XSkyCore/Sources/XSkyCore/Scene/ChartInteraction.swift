@@ -80,8 +80,29 @@ public enum ChartInteraction {
         let phi = atan2(-cos(rAngle) * cos(theta), sin(rAngle))
         let x = Angles.clampUnit(sin(decA) / m)
 
+        // Near a pole both candidates can be exact: one keeps the center
+        // on its side of the pole, the other carries it across, which on
+        // a north-up chart redraws everything rotated 180 degrees. Measure
+        // how far each candidate turns the chart (the screen direction
+        // between two sky points now on the vertical through the center)
+        // and reject large turns, preferring the smaller turn among
+        // equally good fits. A drag with no unturned solution then clamps
+        // at the pole instead of flipping.
+        let halfWidth = viewport.sizeInPoints.width / 2
+        let halfHeight = viewport.sizeInPoints.height / 2
+        let referenceOffset = max(min(halfWidth, halfHeight) / 2, 1)
+        let referenceA = ChartProjection.unproject(
+            Point2D(x: halfWidth, y: halfHeight), in: viewport)
+        let referenceB = ChartProjection.unproject(
+            Point2D(x: halfWidth, y: halfHeight - referenceOffset),
+            in: viewport)
+        // a flip turns ~180 degrees; a genuine large step near a pole can
+        // legitimately turn the chart well past 45
+        let maxTurn = 3 * Double.pi / 4
+        let exactTolerance = 0.25  // squared points
         var best: EquatorialCoordinate = viewport.center
         var bestError = Double.infinity
+        var bestTurn = Double.infinity
         for candidate in [asin(x) - phi, .pi - asin(x) - phi] {
             var decC = candidate
             // fold into the valid declination range; infeasible drags
@@ -105,8 +126,16 @@ public enum ChartInteraction {
             let dx = p.x - target.x
             let dy = p.y - target.y
             let error = dx * dx + dy * dy
-            if error < bestError {
+            // the reference pair points straight up before the move
+            let a = ChartProjection.project(referenceA, in: vp)
+            let b = ChartProjection.project(referenceB, in: vp)
+            let turn = abs(atan2(b.x - a.x, a.y - b.y))
+            if turn > maxTurn { continue }
+            let bothExact =
+                error <= exactTolerance && bestError <= exactTolerance
+            if bothExact ? turn < bestTurn : error < bestError {
                 bestError = error
+                bestTurn = turn
                 best = center
             }
         }
