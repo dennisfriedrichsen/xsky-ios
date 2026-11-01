@@ -29,9 +29,18 @@ final class XSkyAppUITests: XCTestCase {
                 || app.descendants(matching: .any)["chart.canvas"].firstMatch
                     .waitForExistence(timeout: 5),
             "chart did not appear")
+        showSidebar(app)
         // catalog load finished when the YBS row shows its count
         XCTAssertTrue(
             app.staticTexts["9,096 objects"].waitForExistence(timeout: 20))
+    }
+
+    /// The sidebar starts hidden after a reset; a relaunch restores it.
+    private func showSidebar(_ app: XCUIApplication) {
+        let sidebar = app.descendants(matching: .any)["sidebar"].firstMatch
+        if sidebar.exists { return }
+        app.buttons["toolbar.sidebar"].tap()
+        XCTAssertTrue(sidebar.waitForExistence(timeout: 5), "sidebar did not open")
     }
 
     /// Scroll the lazy sidebar list until an element exists.
@@ -53,7 +62,14 @@ final class XSkyAppUITests: XCTestCase {
         let field = app.textFields["search.field"]
         XCTAssertTrue(field.waitForExistence(timeout: 10))
         field.tap()
+        // keystrokes sent while the keyboard is still appearing can be
+        // dropped; wait for it and retype if the text did not land
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5))
         field.typeText(query)
+        if field.value as? String != query {
+            field.typeText(query)
+        }
+        XCTAssertEqual(field.value as? String, query)
         let results = app.descendants(matching: .any)["search.results"]
         XCTAssertTrue(results.waitForExistence(timeout: 10))
         let first = results.buttons.firstMatch

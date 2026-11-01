@@ -10,6 +10,14 @@ import XSkyCore
 @Suite("App wiring")
 struct XSkyAppTests {
 
+    /// WorkspaceModel restores persisted state, and the app container is
+    /// shared with UI test runs; start each test from defaults.
+    init() {
+        if let url = try? WorkspacePersistence.defaultFileURL() {
+            try? FileManager.default.removeItem(at: url)
+        }
+    }
+
     @Test func workspaceModelStartsWithLegacyDefaultView() {
         let workspace = WorkspaceModel()
         let ra = SexagesimalRA(radians: workspace.viewport.center.rightAscension)
