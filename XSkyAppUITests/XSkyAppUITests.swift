@@ -62,7 +62,14 @@ final class XSkyAppUITests: XCTestCase {
         let field = app.textFields["search.field"]
         XCTAssertTrue(field.waitForExistence(timeout: 10))
         field.tap()
+        // keystrokes sent while the keyboard is still appearing can be
+        // dropped; wait for it and retype if the text did not land
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5))
         field.typeText(query)
+        if field.value as? String != query {
+            field.typeText(query)
+        }
+        XCTAssertEqual(field.value as? String, query)
         let results = app.descendants(matching: .any)["search.results"]
         XCTAssertTrue(results.waitForExistence(timeout: 10))
         let first = results.buttons.firstMatch
