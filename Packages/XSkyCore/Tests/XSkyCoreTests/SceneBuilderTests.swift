@@ -237,6 +237,133 @@ struct SceneBuilderTests {
         }
     }
 
+    /// Frame-by-frame drag, as the chart's pan gesture applies it.
+    private func drag(
+        _ start: ChartViewport, from grab: Point2D, by offset: Point2D,
+        steps: Int = 60
+    ) -> [ChartViewport] {
+        var vp = start
+        var previous = grab
+        var frames: [ChartViewport] = []
+        for step in 1...steps {
+            let f = Double(step) / Double(steps)
+            let location = Point2D(
+                x: grab.x + offset.x * f, y: grab.y + offset.y * f)
+            vp = ChartInteraction.panned(vp, from: previous, to: location)
+            previous = location
+            frames.append(vp)
+        }
+        return frames
+    }
+
+    /// The direction (radians) in which a sky point lies from the screen
+    /// center, clockwise from straight down.
+    private func bearing(
+        of sky: EquatorialCoordinate, in vp: ChartViewport
+    ) -> Double {
+        let p = ChartProjection.project(sky, in: vp)
+        return atan2(
+            p.x - vp.sizeInPoints.width / 2, p.y - vp.sizeInPoints.height / 2)
+    }
+
+    /// Dragging a pole to the center and on past it stops there: the
+    /// center stays on the pole and the chart does not turn, wherever the
+    /// finger is relative to the pole.
+    @Test func dragPastPoleStopsWithoutSpinning() {
+        let sky = EquatorialCoordinate(
+            rightAscension: Radians(hours: 6), declination: Radians(degrees: -75))
+        let cases: [(ChartViewport, Point2D, Point2D)] = [
+            // south pole below center: drag it up through the center
+            (
+                viewport(raHours: 3, decDegrees: -80, scale: 0.04),
+                Point2D(x: 700, y: 640), Point2D(x: 0, y: -500)
+            ),
+            // the same, finger well off to the side and drifting
+            (
+                viewport(raHours: 3, decDegrees: -80, scale: 0.04),
+                Point2D(x: 900, y: 700), Point2D(x: -12, y: -600)
+            ),
+            // passing just beside the pole rather than through it
+            (
+                viewport(raHours: 3, decDegrees: -80, scale: 0.04),
+                Point2D(x: 515, y: 640), Point2D(x: 0, y: -500)
+            ),
+            // north pole above center, upside down
+            (
+                viewport(
+                    raHours: 15, decDegrees: 80, scale: 0.04,
+                    orientation: .downunder),
+                Point2D(x: 300, y: 640), Point2D(x: 0, y: -500)
+            ),
+        ]
+        for (start, grab, offset) in cases {
+            let frames = drag(start, from: grab, by: offset)
+            let reference = EquatorialCoordinate(
+                rightAscension: sky.rightAscension,
+                declination: Radians(
+                    start.center.declination.value < 0
+                        ? sky.declination.value : -sky.declination.value))
+            let firstAtPole = try! #require(
+                frames.firstIndex {
+                    abs($0.center.declination.degrees) > 90 - 1e-6
+                }, "never reached the pole from \(start.center)")
+            #expect(firstAtPole < 45)
+            let settled = bearing(of: reference, in: frames[firstAtPole])
+            for vp in frames[firstAtPole...] {
+                #expect(abs(vp.center.declination.degrees) > 90 - 1e-6)
+                var turned = abs(bearing(of: reference, in: vp) - settled)
+                turned = min(turned, 2 * .pi - turned)
+                // only the horizontal drift may turn the chart, by about
+                // 12 points around a 350-point radius
+                #expect(
+                    turned < 3 * Double.pi / 180,
+                    "from \(start.center): turned \(turned) rad at the pole")
+            }
+        }
+    }
+
+    /// At a pole a horizontal drag turns the chart about it: the sky
+    /// below the pole moves with a finger below it, and against a finger
+    /// above it, in either orientation.
+    @Test func horizontalDragAtPoleTurnsChart() {
+        for (decDegrees, orientation) in [
+            (-90.0, ChartOrientation.normal), (90, .normal),
+            (-90, .downunder), (90, .downunder),
+        ] {
+            let vp = viewport(
+                raHours: 4, decDegrees: decDegrees, scale: 0.04,
+                orientation: orientation)
+            let below = Point2D(x: 512, y: 684)
+            let above = Point2D(x: 512, y: 84)
+            let skyBelow = ChartProjection.unproject(below, in: vp)
+            for (grab, sign) in [(below, 1.0), (above, -1.0)] {
+                let moved = try! #require(
+                    drag(vp, from: grab, by: Point2D(x: 60, y: 0)).last)
+                let p = ChartProjection.project(skyBelow, in: moved)
+                #expect(
+                    abs(moved.center.declination.degrees) > 90 - 1e-6)
+                // about 60 points along a 300-point radius
+                #expect(
+                    abs((p.x - below.x) - 60 * sign) < 6,
+                    "dec \(decDegrees) \(orientation), grab \(grab): \(p)")
+            }
+        }
+    }
+
+    /// From a pole, a drag away from it pans normally again.
+    @Test func dragAwayFromPoleLeavesIt() {
+        // the south pole sits below center on a north-up chart, so
+        // dragging down pulls it down and away
+        let vp = viewport(raHours: 4, decDegrees: -90, scale: 0.04)
+        let grab = Point2D(x: 512, y: 300)
+        let moved = try! #require(
+            drag(vp, from: grab, by: Point2D(x: 0, y: 200)).last)
+        let anchor = ChartProjection.unproject(grab, in: vp)
+        let p = ChartProjection.project(anchor, in: moved)
+        #expect(abs(moved.center.declination.degrees + 82) < 0.2)
+        #expect(abs(p.y - 500) < 1 && abs(p.x - 512) < 1, "\(p)")
+    }
+
     /// Pinch stays anchored to its centroid within one logical point.
     @Test func zoomIsAnchoredAtCentroid() {
         let vp = viewport(raHours: 5.6, decDegrees: 30)

@@ -202,11 +202,9 @@ final class WorkspaceModel {
         let center = Point2D(
             x: viewport.sizeInPoints.width / 2,
             y: viewport.sizeInPoints.height / 2)
-        let anchor = ChartProjection.unproject(center, in: viewport)
-        var vp = viewport
-        vp.center = ChartInteraction.centerKeeping(
-            anchor: anchor,
-            under: Point2D(x: center.x + dx, y: center.y + dy), in: viewport)
+        let vp = ChartInteraction.panned(
+            viewport, from: center,
+            to: Point2D(x: center.x + dx, y: center.y + dy))
         commitViewport(vp, undoLabel: "Pan")
     }
 

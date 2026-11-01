@@ -87,17 +87,9 @@ public enum ChartInteraction {
         // between two sky points now on the vertical through the center)
         // and reject large turns, preferring the smaller turn among
         // equally good fits. A drag with no unturned solution then clamps
-        // at the pole instead of flipping.
-        let halfWidth = viewport.sizeInPoints.width / 2
-        let halfHeight = viewport.sizeInPoints.height / 2
-        let referenceOffset = max(min(halfWidth, halfHeight) / 2, 1)
-        let referenceA = ChartProjection.unproject(
-            Point2D(x: halfWidth, y: halfHeight), in: viewport)
-        let referenceB = ChartProjection.unproject(
-            Point2D(x: halfWidth, y: halfHeight - referenceOffset),
-            in: viewport)
-        // a flip turns ~180 degrees; a genuine large step near a pole can
-        // legitimately turn the chart well past 45
+        // at the pole instead of flipping. A flip turns ~180 degrees; a
+        // genuine large step near a pole can legitimately turn the chart
+        // well past 45
         let maxTurn = 3 * Double.pi / 4
         let exactTolerance = 0.25  // squared points
         var best: EquatorialCoordinate = viewport.center
@@ -126,20 +118,116 @@ public enum ChartInteraction {
             let dx = p.x - target.x
             let dy = p.y - target.y
             let error = dx * dx + dy * dy
-            // the reference pair points straight up before the move
-            let a = ChartProjection.project(referenceA, in: vp)
-            let b = ChartProjection.project(referenceB, in: vp)
-            let turn = abs(atan2(b.x - a.x, a.y - b.y))
-            if turn > maxTurn { continue }
+            let turned = turn(from: viewport, to: vp)
+            if turned > maxTurn { continue }
             let bothExact =
                 error <= exactTolerance && bestError <= exactTolerance
-            if bothExact ? turn < bestTurn : error < bestError {
+            if bothExact ? turned < bestTurn : error < bestError {
                 bestError = error
-                bestTurn = turn
+                bestTurn = turned
                 best = center
             }
         }
         return best
+    }
+
+    /// One frame of a drag from `start` to `end`: the sky point under
+    /// `start` follows the finger. Solved frame to frame rather than from
+    /// a point fixed at gesture start, so a drag that hits a pole can stop
+    /// there without the original grab point dragging the chart around.
+    ///
+    /// Once the center sits on a pole it cannot go further: a north-up
+    /// chart there can only turn about the pole. Horizontal motion turns
+    /// it, as if grabbing the sky beside the pole; vertical motion either
+    /// pulls the pole away from the center or is ignored. A step that
+    /// would swing the chart around a pole the center only just misses
+    /// lands on the pole instead.
+    public static func panned(
+        _ viewport: ChartViewport, from start: Point2D, to end: Point2D
+    ) -> ChartViewport {
+        if isOnPole(viewport.center) {
+            let turned = turnedAboutPole(viewport, from: start, to: end)
+            let dy = end.y - start.y
+            guard dy != 0 else { return turned }
+            var away = turned
+            away.center = centerKeeping(
+                anchor: ChartProjection.unproject(start, in: turned),
+                under: Point2D(x: start.x, y: end.y), in: turned)
+            // pulling the pole away moves it with the finger; anything
+            // else would only spin the chart about it
+            let pole = ChartProjection.project(
+                EquatorialCoordinate(
+                    rightAscension: Radians(0),
+                    declination: viewport.center.declination),
+                in: away)
+            let poleShift = hypot(
+                pole.x - viewport.sizeInPoints.width / 2,
+                pole.y - viewport.sizeInPoints.height / 2)
+            return poleShift >= abs(dy) / 2 ? away : turned
+        }
+
+        var vp = viewport
+        vp.center = centerKeeping(
+            anchor: ChartProjection.unproject(start, in: viewport),
+            under: end, in: viewport)
+        guard
+            isOnPole(vp.center)
+                || turn(from: viewport, to: vp) > maxPanStepTurn
+        else { return vp }
+        vp.center = EquatorialCoordinate(
+            rightAscension: viewport.center.rightAscension,
+            declination: Radians(
+                vp.center.declination.value > 0 ? .pi / 2 : -.pi / 2),
+            equinox: viewport.center.equinox)
+        return turnedAboutPole(vp, from: start, to: end)
+    }
+
+    private static func isOnPole(_ center: EquatorialCoordinate) -> Bool {
+        abs(center.declination.value) >= .pi / 2 - 1e-9
+    }
+
+    /// Turn a pole-centered chart by the horizontal part of a drag:
+    /// the sky at the finger's height moves with it, but never so near
+    /// the pole that a small drag spins the chart.
+    private static func turnedAboutPole(
+        _ viewport: ChartViewport, from start: Point2D, to end: Point2D
+    ) -> ChartViewport {
+        let halfWidth = viewport.sizeInPoints.width / 2
+        let halfHeight = viewport.sizeInPoints.height / 2
+        let height = start.y - halfHeight
+        let radius = max(abs(height), min(halfWidth, halfHeight) / 2, 1)
+        let side: Double = height >= 0 ? 1 : -1
+        let angle = (end.x - start.x) * side / radius
+        let north = viewport.center.declination.value > 0
+        var vp = viewport
+        vp.center = EquatorialCoordinate(
+            rightAscension: Radians(
+                viewport.center.rightAscension.value
+                    + (north ? angle : -angle)),
+            declination: viewport.center.declination,
+            equinox: viewport.center.equinox)
+        return vp
+    }
+
+    /// The largest turn one pan step may make before it counts as
+    /// swinging around a pole.
+    static let maxPanStepTurn = 30 * Double.pi / 180
+
+    /// How far the chart turns between two viewports: the screen
+    /// direction, in `to`, between two sky points that lay on the
+    /// vertical through the center in `from`.
+    static func turn(from: ChartViewport, to: ChartViewport) -> Double {
+        let halfWidth = from.sizeInPoints.width / 2
+        let halfHeight = from.sizeInPoints.height / 2
+        let referenceOffset = max(min(halfWidth, halfHeight) / 2, 1)
+        let referenceA = ChartProjection.unproject(
+            Point2D(x: halfWidth, y: halfHeight), in: from)
+        let referenceB = ChartProjection.unproject(
+            Point2D(x: halfWidth, y: halfHeight - referenceOffset),
+            in: from)
+        let a = ChartProjection.project(referenceA, in: to)
+        let b = ChartProjection.project(referenceB, in: to)
+        return abs(atan2(b.x - a.x, a.y - b.y))
     }
 
     /// Zoom by a scale factor anchored at a screen point: the sky position
