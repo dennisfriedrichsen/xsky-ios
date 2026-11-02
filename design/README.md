@@ -26,6 +26,9 @@ legacy C source.
   tests, performance targets, and the definition of done.
 - [LEGACY_RESOURCES.md](LEGACY_RESOURCES.md) records the copied runtime data,
   provenance, integrity hashes, and cache policy.
+- [adr/](adr/) holds architecture decision records for choices that need to
+  outlive the issue thread that prompted them. Supporting measurements live
+  in [reports/](reports/).
 
 ## Binding decisions
 
