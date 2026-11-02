@@ -159,6 +159,234 @@ struct SceneBuilderTests {
         }
     }
 
+    /// Near the pole a grab point can be kept under the finger by two
+    /// centers, one on each side of the pole. A zero-length drag must
+    /// keep the current one rather than jumping across.
+    @Test func zeroPanNearPoleKeepsCenter() {
+        let vp = viewport(raHours: 2.53, decDegrees: 89.26, scale: 0.04)
+        // a grab point past the pole (on the 14h side)
+        let start = Point2D(x: 512, y: 100)
+        let anchor = ChartProjection.unproject(start, in: vp)
+        let center = ChartInteraction.centerKeeping(
+            anchor: anchor, under: start, in: vp)
+        let separation = ChartProjection.angularSeparation(
+            center, vp.center
+        ).degrees
+        #expect(separation < 1e-6, "jumped to \(center)")
+    }
+
+    /// Dragging across the pole clamps there instead of redrawing the
+    /// chart rotated 180 degrees: frame to frame, the pole's screen
+    /// position never jumps and the chart never turns by more than a few
+    /// degrees.
+    @Test func panAcrossPoleNeverFlips() {
+        let pole = EquatorialCoordinate(
+            rightAscension: Radians(0), declination: Radians(.pi / 2))
+        let cases: [(ChartViewport, Point2D, Point2D)] = [
+            // grab beyond the pole, drag down
+            (
+                viewport(raHours: 2.53, decDegrees: 89.26, scale: 0.04),
+                Point2D(x: 512, y: 100), Point2D(x: 0, y: 600)
+            ),
+            // centered on the pole, drag down
+            (
+                viewport(raHours: 14.49, decDegrees: 90, scale: 0.04),
+                Point2D(x: 512, y: 100), Point2D(x: 0, y: 300)
+            ),
+            // grab below center, drag straight through the pole
+            (
+                viewport(raHours: 2.5, decDegrees: 80, scale: 0.04),
+                Point2D(x: 512, y: 384), Point2D(x: 0, y: 600)
+            ),
+            // the same near the south pole, upside down
+            (
+                viewport(
+                    raHours: 9, decDegrees: -89, scale: 0.04,
+                    orientation: .downunder),
+                Point2D(x: 512, y: 600), Point2D(x: 40, y: -500)
+            ),
+        ]
+        for (start, grab, drag) in cases {
+            var vp = start
+            let anchor = ChartProjection.unproject(grab, in: vp)
+            let southern = start.center.declination.value < 0
+            let trackedPole = southern
+                ? EquatorialCoordinate(
+                    rightAscension: Radians(0),
+                    declination: Radians(-.pi / 2))
+                : pole
+            var previousPole = ChartProjection.project(trackedPole, in: vp)
+            for step in 1...60 {
+                let f = Double(step) / 60
+                let target = Point2D(
+                    x: grab.x + drag.x * f, y: grab.y + drag.y * f)
+                vp.center = ChartInteraction.centerKeeping(
+                    anchor: anchor, under: target, in: vp)
+                let p = ChartProjection.project(trackedPole, in: vp)
+                let jump = (
+                    (p.x - previousPole.x) * (p.x - previousPole.x)
+                        + (p.y - previousPole.y) * (p.y - previousPole.y)
+                ).squareRoot()
+                // the pole may move with the finger (one step is at most
+                // ~10 points) but never leaps across the screen
+                #expect(
+                    jump < 25,
+                    "start \(start.center), step \(step): pole jumped \(jump)")
+                previousPole = p
+            }
+        }
+    }
+
+    /// Frame-by-frame drag, as the chart's pan gesture applies it.
+    private func drag(
+        _ start: ChartViewport, from grab: Point2D, by offset: Point2D,
+        steps: Int = 60
+    ) -> [ChartViewport] {
+        var vp = start
+        var previous = grab
+        var frames: [ChartViewport] = []
+        for step in 1...steps {
+            let f = Double(step) / Double(steps)
+            let location = Point2D(
+                x: grab.x + offset.x * f, y: grab.y + offset.y * f)
+            vp = ChartInteraction.panned(vp, from: previous, to: location)
+            previous = location
+            frames.append(vp)
+        }
+        return frames
+    }
+
+    /// The pole's screen offset from the center, in points.
+    private func poleOffset(
+        _ vp: ChartViewport, north: Bool
+    ) -> Double {
+        let pole = EquatorialCoordinate(
+            rightAscension: Radians(0),
+            declination: Radians(north ? .pi / 2 : -.pi / 2))
+        let p = ChartProjection.project(pole, in: vp)
+        return hypot(
+            p.x - vp.sizeInPoints.width / 2,
+            p.y - vp.sizeInPoints.height / 2)
+    }
+
+    /// Dragging a pole toward the center stops it in the outer 30% of the
+    /// screen, without turning the chart, wherever the finger is.
+    @Test func dragTowardPoleStopsShortOfMiddle() {
+        let cases: [(ChartViewport, Point2D, Point2D)] = [
+            // south pole below center: drag it up past the center
+            (
+                viewport(raHours: 3, decDegrees: -80, scale: 0.04),
+                Point2D(x: 700, y: 640), Point2D(x: 0, y: -500)
+            ),
+            // the same, finger well off to the side and drifting
+            (
+                viewport(raHours: 3, decDegrees: -80, scale: 0.04),
+                Point2D(x: 900, y: 700), Point2D(x: -12, y: -600)
+            ),
+            // the finger right beside the pole's path
+            (
+                viewport(raHours: 3, decDegrees: -80, scale: 0.04),
+                Point2D(x: 515, y: 640), Point2D(x: 0, y: -500)
+            ),
+            // north pole, upside down
+            (
+                viewport(
+                    raHours: 15, decDegrees: 80, scale: 0.04,
+                    orientation: .downunder),
+                Point2D(x: 300, y: 640), Point2D(x: 0, y: -500)
+            ),
+        ]
+        let minimumOffset = 768 * 0.2
+        for (start, grab, offset) in cases {
+            let north = start.center.declination.value > 0
+            let frames = drag(start, from: grab, by: offset)
+            var previous = start
+            for vp in frames {
+                #expect(
+                    poleOffset(vp, north: north) > minimumOffset - 0.5,
+                    "from \(start.center): pole reached the middle")
+                let turned = ChartInteraction.turn(from: previous, to: vp)
+                #expect(
+                    turned < 2 * Double.pi / 180,
+                    "from \(start.center): turned \(turned) rad in a step")
+                previous = vp
+            }
+            let last = try! #require(frames.last)
+            #expect(abs(poleOffset(last, north: north) - minimumOffset) < 1)
+        }
+    }
+
+    /// At the limit, a horizontal drag still pans. (Sky between the
+    /// center and the pole can only move so far sideways before it would
+    /// bring the pole nearer.)
+    @Test func horizontalDragAtPoleLimitPans() {
+        let limited = try! #require(
+            drag(
+                viewport(raHours: 3, decDegrees: -80, scale: 0.04),
+                from: Point2D(x: 512, y: 640), by: Point2D(x: 0, y: -300)
+            ).last)
+        // above the center, away from the pole
+        let grab = Point2D(x: 512, y: 200)
+        let sky = ChartProjection.unproject(grab, in: limited)
+        let moved = try! #require(
+            drag(limited, from: grab, by: Point2D(x: 80, y: 0)).last)
+        let p = ChartProjection.project(sky, in: moved)
+        // panning sideways this near a pole would also draw the pole in a
+        // little, which the limit holds back
+        #expect(abs(p.x - 592) < 1 && abs(p.y - 200) < 12, "\(p)")
+    }
+
+    /// Zooming out near a pole pushes the center away so the pole stays
+    /// out of the middle.
+    @Test func zoomOutKeepsPoleOutOfMiddle() {
+        let vp = viewport(raHours: 3, decDegrees: 82, scale: 0.04)
+        let zoomed = ChartInteraction.zoomedViewport(
+            vp, scaleFactor: 2, anchor: Point2D(x: 512, y: 384))
+        #expect(poleOffset(zoomed, north: true) > 768 * 0.2 - 0.5)
+    }
+
+    /// At a pole a horizontal drag turns the chart about it: the sky
+    /// below the pole moves with a finger below it, and against a finger
+    /// above it, in either orientation.
+    @Test func horizontalDragAtPoleTurnsChart() {
+        for (decDegrees, orientation) in [
+            (-90.0, ChartOrientation.normal), (90, .normal),
+            (-90, .downunder), (90, .downunder),
+        ] {
+            let vp = viewport(
+                raHours: 4, decDegrees: decDegrees, scale: 0.04,
+                orientation: orientation)
+            let below = Point2D(x: 512, y: 684)
+            let above = Point2D(x: 512, y: 84)
+            let skyBelow = ChartProjection.unproject(below, in: vp)
+            for (grab, sign) in [(below, 1.0), (above, -1.0)] {
+                let moved = try! #require(
+                    drag(vp, from: grab, by: Point2D(x: 60, y: 0)).last)
+                let p = ChartProjection.project(skyBelow, in: moved)
+                #expect(
+                    abs(moved.center.declination.degrees) > 90 - 1e-6)
+                // about 60 points along a 300-point radius
+                #expect(
+                    abs((p.x - below.x) - 60 * sign) < 6,
+                    "dec \(decDegrees) \(orientation), grab \(grab): \(p)")
+            }
+        }
+    }
+
+    /// From a pole, a drag away from it pans normally again.
+    @Test func dragAwayFromPoleLeavesIt() {
+        // the south pole sits below center on a north-up chart, so
+        // dragging down pulls it down and away
+        let vp = viewport(raHours: 4, decDegrees: -90, scale: 0.04)
+        let grab = Point2D(x: 512, y: 300)
+        let moved = try! #require(
+            drag(vp, from: grab, by: Point2D(x: 0, y: 200)).last)
+        let anchor = ChartProjection.unproject(grab, in: vp)
+        let p = ChartProjection.project(anchor, in: moved)
+        #expect(abs(moved.center.declination.degrees + 82) < 0.2)
+        #expect(abs(p.y - 500) < 1 && abs(p.x - 512) < 1, "\(p)")
+    }
+
     /// Pinch stays anchored to its centroid within one logical point.
     @Test func zoomIsAnchoredAtCentroid() {
         let vp = viewport(raHours: 5.6, decDegrees: 30)
