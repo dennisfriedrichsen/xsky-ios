@@ -9,7 +9,7 @@ import XSkyCore
 struct ChartView: View {
     @Environment(WorkspaceModel.self) private var workspace
 
-    @State private var dragAnchor: EquatorialCoordinate?
+    @State private var lastDragLocation: CGPoint?
     @State private var pinchStartViewport: ChartViewport?
     @State private var regionRect: CGRect?
     @State private var lastInteractionPoint: CGPoint = .zero
@@ -138,26 +138,19 @@ struct ChartView: View {
         DragGesture(minimumDistance: 3)
             .onChanged { value in
                 lastInteractionPoint = value.location
-                if dragAnchor == nil {
-                    dragAnchor = ChartProjection.unproject(
-                        Point2D(
-                            x: value.startLocation.x,
-                            y: value.startLocation.y),
-                        in: workspace.viewport)
-                }
-                guard let anchor = dragAnchor else { return }
-                // solve from the previous frame so each step stays
-                // continuous (no 180-degree flip when crossing a pole)
-                var vp = workspace.gestureViewport ?? workspace.viewport
-                vp.center = ChartInteraction.centerKeeping(
-                    anchor: anchor,
-                    under: Point2D(x: value.location.x, y: value.location.y),
-                    in: vp)
+                let previous = lastDragLocation ?? value.startLocation
+                lastDragLocation = value.location
+                // step from the previous frame so the chart stays
+                // continuous and stops at a pole instead of spinning
+                let vp = ChartInteraction.panned(
+                    workspace.gestureViewport ?? workspace.viewport,
+                    from: Point2D(x: previous.x, y: previous.y),
+                    to: Point2D(x: value.location.x, y: value.location.y))
                 workspace.gestureViewport = vp
                 workspace.rebuildForGesturePreview()
             }
             .onEnded { _ in
-                dragAnchor = nil
+                lastDragLocation = nil
                 if let vp = workspace.gestureViewport {
                     workspace.commitViewport(vp, undoLabel: "Pan")
                 }
