@@ -260,7 +260,7 @@ conclusion is a human's to make and is **deferred**.
 
 Nothing from either distribution is committed to this repository except
 16 sample records used as a test fixture. No entry has been added to
-`Resources/LegacyCatalogs/ACKNOWLEDGEMENTS` or `NOTICES.txt`, because
+`Resources/Notices/ACKNOWLEDGEMENTS` or `NOTICES.txt`, because
 nothing is bundled.
 
 ## Consequences
